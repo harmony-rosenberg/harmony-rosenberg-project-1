@@ -22,6 +22,36 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'first',
+        validate: {
+          len: [2, 30],
+          isAlpha: true,
+          notContains: ' ',
+          isNotEmail(value) {
+            if (Validator.isEmail(value)) {
+              throw new Error("Cannot be an email.");
+            }
+          }
+        }
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'last',
+        validate: {
+          len: [2, 30],
+          isAlpha: true,
+          notContains: ' ',
+          isNotEmail(value) {
+            if (Validator.isEmail(value)) {
+              throw new Error("Cannot be an email.");
+            }
+          }
+        }
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,

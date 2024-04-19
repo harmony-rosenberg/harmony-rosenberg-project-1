@@ -1,5 +1,7 @@
 # `<Harmony's Really Good AirBnb Clone>`
 
+
+
 ## Database Schema Design
 
 `<insert database schema design here>`

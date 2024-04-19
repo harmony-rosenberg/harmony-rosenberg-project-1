@@ -8,22 +8,36 @@ if (process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('airbnb_schema.Users', 'firstName', {
+    await queryInterface.addColumn({
+      tableName: 'Users',
+      schema: 'airbnb_schema',
+    }, 'firstName', {
       type: Sequelize.STRING,
       allowNull: false,
       defaultValue: 'first'
-    }, options)
+    })
 
-    await queryInterface.addColumn('airbnb_schema.Users', 'lastName', {
-      type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: 'first'
-    }, options)
-
+      await queryInterface.addColumn({
+        tableName: 'Users',
+        schema: 'airbnb_schema',
+      }, 'lastName', {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'last'
+      })
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeColumn('airbnb_schema.Users', 'firstName', options);
-    await queryInterface.removeColumn('airbnb_schema.Users', 'lastName', options);
+    // await queryInterface.removeColumn('airbnb_schema.Users', 'firstName', {options});
+    // await queryInterface.removeColumn('airbnb_schema.Users', 'lastName', {options});
+    await queryInterface.removeColumn({
+      tableName: 'Users',
+      schema: 'airbnb_schema'
+    }, 'firstName');
+
+    await queryInterface.removeColumn({
+      tableName: 'Users',
+      schema: 'airbnb_schema'
+    }, 'lastName');
   }
 };

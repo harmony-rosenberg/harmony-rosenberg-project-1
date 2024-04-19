@@ -13,13 +13,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harmony-rosenberg/back-end-project-airbnb-clone.git"
+    "url": "git+https://github.com/harmony-rosenberg/harmony-rosenberg-project-1.git.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/harmony-rosenberg/back-end-project-airbnb-clone/issues"
+
+    "url": "https://github.com/harmony-rosenberg/harmony-rosenberg-project-1.git/issues"
   },
-  "homepage": "https://github.com/harmony-rosenberg/back-end-project-airbnb-clone#readme"
+  "homepage": "https://github.com/harmony-rosenberg/harmony-rosenberg-project-1.git#readme"
+
+
+  },
+
 }

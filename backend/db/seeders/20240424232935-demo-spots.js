@@ -1,6 +1,5 @@
 'use strict';
 
-const { mapFinderOptions } = require('sequelize/lib/utils');
 const { Spot } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */

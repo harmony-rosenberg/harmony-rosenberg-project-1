@@ -11,7 +11,19 @@ module.exports = {
       userId: 2,
       startDate: '2024-04-27',
       endDate: '2024-04-29'
-    }
+    },
+    {
+      spotId: 2,
+      userId: 3,
+      startDate: '2024-05-27',
+      endDate: '2024-05-29'
+    },
+    {
+      spotId: 3,
+      userId: 1,
+      startDate: '2024-06-27',
+      endDate: '2024-06-29'
+    },
    ])
   },
 
@@ -21,6 +33,18 @@ module.exports = {
       userId: 2,
       startDate: '2024-04-27',
       endDate: '2024-04-29'
-    })
+    },
+    {
+      spotId: 2,
+      userId: 3,
+      startDate: '2024-05-27',
+      endDate: '2024-05-29'
+    },
+    {
+      spotId: 3,
+      userId: 1,
+      startDate: '2024-06-27',
+      endDate: '2024-06-29'
+    },)
   }
 };

@@ -2,12 +2,11 @@
 
 const { Spot } = require('../models');
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
    await Spot.bulkCreate([
     {
-      ownerId: 10,
+      ownerId: 1,
       address: '1234 fake street',
       city: 'fakeCity',
       state: 'fakeState',
@@ -23,7 +22,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkDelete('Spots', {
-      ownerId: 10,
+      ownerId: 1,
       address: '1234 fake street',
       city: 'fakeCity',
       state: 'fakeState',

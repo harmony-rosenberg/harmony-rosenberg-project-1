@@ -27,7 +27,6 @@ module.exports = (sequelize, DataTypes) => {
     startDate: {
       type: DataTypes.DATE,
       unique: true,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     endDate: {
       type: DataTypes.DATE,

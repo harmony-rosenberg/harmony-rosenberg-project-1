@@ -10,7 +10,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn({
       tableName: 'Users',
-      schema: 'airbnb_schema',
+      // schema: 'airbnb_schema',
     }, 'firstName', {
       type: Sequelize.STRING,
       allowNull: false,
@@ -19,7 +19,7 @@ module.exports = {
 
       await queryInterface.addColumn({
         tableName: 'Users',
-        schema: 'airbnb_schema',
+        // schema: 'airbnb_schema',
       }, 'lastName', {
         type: Sequelize.STRING,
         allowNull: false,
@@ -32,12 +32,12 @@ module.exports = {
     // await queryInterface.removeColumn('airbnb_schema.Users', 'lastName', {options});
     await queryInterface.removeColumn({
       tableName: 'Users',
-      schema: 'airbnb_schema'
+      // schema: 'airbnb_schema'
     }, 'firstName');
 
     await queryInterface.removeColumn({
       tableName: 'Users',
-      schema: 'airbnb_schema'
+      // schema: 'airbnb_schema'
     }, 'lastName');
   }
 };

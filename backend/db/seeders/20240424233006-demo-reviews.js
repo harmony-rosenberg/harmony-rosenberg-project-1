@@ -2,6 +2,11 @@
 
 const { Review } = require('../models');
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -24,11 +29,12 @@ module.exports = {
         review: "if all goes as planned this will be a review in the sql database!",
         stars: 5.0
       }
-    ])
+    ], options, { validate: true });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Reviews', {
+    options.tableName = "Reviews"
+    return queryInterface.bulkDelete(options, {
       userId: 3,
       spotId: 1,
       review: "very good demo spot harm! wow! fantastic work! keep it up!",

@@ -2,6 +2,11 @@
 
 const { Spot } = require('../models');
 
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
+
 module.exports = {
   async up (queryInterface, Sequelize) {
    await Spot.bulkCreate([
@@ -41,11 +46,12 @@ module.exports = {
       description: 'a very not great fake place for the purposes of a demo!',
       price: 50.00,
     }
-   ])
+   ], options, {validate: true})
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Spots', {
+    options.tableName = "Spots";
+    return queryInterface.bulkDelete(options, {
       ownerId: 1,
       address: '1234 fake street',
       city: 'fakeCity',

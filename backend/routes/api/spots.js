@@ -1,22 +1,47 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, spotImage } = require('../../db/models')
+const { Spot, spotImage, Review} = require('../../db/models');
+
 
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
 
-	// let spots = await Spot.findAll({include: spotImage})
+	let spotData = []
 
-	let spots = spotImage.findAll({include: Spot})
+	let spots = await Spot.findAll({
+		include: {
+			model: spotImage,
+			attributes: ['previewImage','url']
+		}
+	})
 
-	// console.log('test!!!!!!!!!!!!!!!!!!', spots[0].spotImage)
+	const spotReviews = await Spot.findAll({
+		include: {
+			model: Review,
+			attributes: ['stars']
+		}
+	})
 
-	res.json(spots)
+	const numOfReviews = await Review.count()
+
+	console.log('TEST -------------->', numOfReviews)
+
+	spotData = [...spots]
+
+	res.json(spotData)
 })
+
 
 //GET ALL SPOTS FOR CURRENT USER
 router.get('/current', async (req, res, next) => {
 
+	const userSpots = await Spot.findAll({
+		where: {
+			ownerId: req.user.id
+		}
+	})
+
+	res.json(userSpots)
 })
 
 
@@ -57,9 +82,9 @@ router.post('/', async (req, res, next) => {
 //DELETE A SPOT BY ID
 router.delete('/:id', async (req, res, next) => {
 	try {
-		const deadSpot = await Spot.findOne({where: {id: req.params.id}});
+		const deadSpot = await Spot.findOne({where: {id: req.params.id, ownerId: req.user.id}});
 
-		await deadSpot.destroy();
+			await deadSpot.destroy();
 
 		res.json({
 			status: "success!",

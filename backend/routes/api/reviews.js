@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage} = require('../../db/models');
 
+//GET REVIEWS FOR CURRENT USER
 router.get('/current', async(req, res, next) => {
 	const userReviews = await Review.findAll({
 		where: {
@@ -25,6 +26,7 @@ router.get('/current', async(req, res, next) => {
 
 	res.json(userReviews)
 })
+
 
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, spotImage, Review} = require('../../db/models');
+const { Spot, spotImage, Review, User} = require('../../db/models');
 
 
 //GET ALL SPOTS
@@ -42,6 +42,38 @@ router.get('/current', async (req, res, next) => {
 	})
 
 	res.json(userSpots)
+})
+
+//GET DETAILS FOR SPOT FROM ID
+router.get('/:id', async (req, res, next) => {
+	try{
+		const spot = await Spot.findOne({
+			where: {
+				id: req.params.id
+			}, include: [{
+				model: spotImage,
+				attributes: ['id', 'url', 'previewImage']
+			}, {
+				model: User,
+				attributes: ['id', 'firstName', 'lastName']
+			}]
+		})
+
+		if(!spot) {
+			next({
+			status: 404,
+			message: "that spot doesnt exist, buddy!"
+			})
+		}
+
+		res.json(spot)
+
+	} catch(err) {
+		next({
+			status: 404,
+			message: "that spot doesnt exist, buddy!"
+		})
+	}
 })
 
 

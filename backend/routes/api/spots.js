@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, spotImage, Review, User, reviewImage} = require('../../db/models');
+const { Spot, spotImage, Review, User, reviewImage, Booking} = require('../../db/models');
 
 
 //GET ALL SPOTS
@@ -190,6 +190,49 @@ router.post('/:spotId/images', async(req, res, next) => {
 
 	res.json(image)
 })
+
+//CREATE BOOKING FOR A SPOT
+router.post('/:spotId/bookings', async(req, res, next) => {
+	let {startDate, endDate} = req.body
+
+	const spot = await Spot.findOne({where: {id: req.params.spotId}, include: Booking})
+
+	const currBooking = await spot.getBookings()
+	console.log('TEST --------------->', currBooking.startDate)
+
+	if(currBooking.startDate === startDate || currBooking.endDate === endDate) {
+		next({
+			status: 403,
+			message: "already booked for this period"
+		})
+	}
+
+	if(!spot) {
+		next({
+			status: 404,
+			message: "Spot couldn't be found"
+		})
+	}
+
+	if(spot.ownerId === req.user.id) {
+		next({
+			status: 403,
+			message: "Can not book a spot that you own" //still allows creation of booking
+		})
+	}
+
+
+
+	const newBooking = await Booking.create({
+		userId: req.user.id,
+		spotId: spot.id,
+		startDate,
+		endDate
+	})
+
+	res.json(newBooking)
+})
+
 
 
 //CREATE REVIEW FOR SPOT BASED ON ID

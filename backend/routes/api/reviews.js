@@ -27,6 +27,52 @@ router.get('/current', async(req, res, next) => {
 	res.json(userReviews)
 })
 
+//EDIT A REVIEW
+router.put('/:reviewId', async(req, res, next) => {
+	let {review, stars} = req.body
+
+	const editReview = await Review.findOne({where: {id: req.params.reviewId, userId: req.user.id}})
+
+	if(!editReview) {
+		next({
+			status: 404,
+			message: "Review couldn't be found"
+		})
+	}
+
+	if(review) {
+		editReview.review = review
+	}
+	if(stars) {
+		editReview.stars = stars
+	}
+
+	await editReview.save()
+
+	res.json({
+		message: "Successfully edited your review!",
+		data: editReview
+	})
+})
+
+//DELTE A REVIEW
+router.delete('/:reviewId', async(req, res, next) => {
+	const deadReview = await Review.findOne({where: {id: req.params.reviewId, userId: req.user.id}});
+
+	if(!deadReview) {
+		next({
+			status: 404,
+			message: "Review couldn't be found"
+		})
+	}
+
+	await deadReview.destroy();
+
+	res.json({
+		message: "Successfully deleted your review"
+	})
+
+})
 
 
 module.exports = router;

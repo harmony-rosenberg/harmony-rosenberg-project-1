@@ -18,7 +18,7 @@ router.delete('/:imageId', async(req, res, next) => {
 	if(!deadImage) {
 		next({
 			status: 404,
-			message: "Couldn't find this image associated with any review"
+			message: "Couldn't find this image associated with any reviews"
 		})
 	}
 

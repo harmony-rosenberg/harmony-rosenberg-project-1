@@ -55,6 +55,38 @@ router.put('/:reviewId', async(req, res, next) => {
 	})
 })
 
+
+//ADD IMAGE TO REVIEW
+router.post('/:reviewId/images', async(req, res, next) => {
+
+	let {url} = req.body
+
+	const currReview = await Review.findOne({
+		where: {
+			id: req.params.reviewId,
+			userId: req.user.id
+		}
+	})
+
+	if(!currReview) {
+		next({
+			status: 404,
+			message: "Couldn't find review"
+		})
+	}
+
+	console.log(currReview)
+
+	const newImage = await reviewImage.create({
+		reviewId: req.params.reviewId,
+		url: "new image url here"
+	})
+
+	res.json(newImage)
+
+})
+
+
 //DELTE A REVIEW
 router.delete('/:reviewId', async(req, res, next) => {
 	const deadReview = await Review.findOne({where: {id: req.params.reviewId, userId: req.user.id}});

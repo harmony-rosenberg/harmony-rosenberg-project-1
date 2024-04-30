@@ -9,24 +9,25 @@ router.get('/', async (req, res) => {
 	let spotData = []
 
 	let spots = await Spot.findAll({
-		include: {
-			model: spotImage,
-			attributes: ['previewImage','url']
-		}
+		// include: [{
+		// 	model: Review
+		// }, {
+		// 	model: spotImage
+		// }]
 	})
 
-	const spotReviews = await Spot.findAll({
-		include: {
-			model: Review,
-			attributes: ['stars']
+	for(let i = 0; i < spots.length; i++) {
+		const spot = spots[i];
+		const reviewData = {
+			review: spot.Reviews
 		}
-	})
 
-	const numOfReviews = await Review.count()
+		console.log('TEST -------------->', reviewData)
+		spotData.push (reviewData)
+	}
 
-	console.log('TEST -------------->', numOfReviews)
 
-	spotData = [...spots]
+	spotData = []
 
 	res.json(spotData)
 })
@@ -46,7 +47,7 @@ router.get('/current', async (req, res, next) => {
 
 //GET DETAILS FOR SPOT FROM ID
 router.get('/:id', async (req, res, next) => {
-	try{
+
 		const spot = await Spot.findOne({
 			where: {
 				id: req.params.id
@@ -60,20 +61,12 @@ router.get('/:id', async (req, res, next) => {
 		})
 
 		if(!spot) {
-			next({
-			status: 404,
-			message: "that spot doesnt exist, buddy!"
-			})
+			throw new Error(next({
+				status: 404,
+				message: "Couldn't find spot!"
+				}))
 		}
-
 		res.json(spot)
-
-	} catch(err) {
-		next({
-			status: 404,
-			message: "that spot doesnt exist, buddy!"
-		})
-	}
 })
 
 
@@ -188,7 +181,13 @@ router.post('/:spotId/images', async(req, res, next) => {
 		previewImage
 	})
 
-	res.json(image)
+	const payload = {
+		id: image.id,
+		url: image.url,
+		previewImage: image.previewImage
+	}
+
+	res.json(payload)
 })
 
 //CREATE BOOKING FOR A SPOT
@@ -215,10 +214,12 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 	}
 
 	if(spot.ownerId === req.user.id) {
-		next({
-			status: 403,
-			message: "Can not book a spot that you own" //still allows creation of booking
-		})
+		throw new Error(
+			next({
+				status: 403,
+				message: "Can not book a spot that you own" //still allows creation of booking
+			})
+		)
 	}
 
 	const newBooking = await Booking.create({

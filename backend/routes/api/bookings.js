@@ -26,6 +26,34 @@ router.get('/current', async(req, res, next) => {
 	res.json(userBookings);
 })
 
+//EDIT A BOOKING
+router.put('/:bookingId', async(req, res, next) => {
+	let {startDate, endDate} = req.body;
+
+	const editBooking = await Booking.findOne({where: {id: req.params.bookingId}});
+
+	if(!editBooking) {
+		next({
+			status: 404,
+			message: "Booking couldn't be found"
+		})
+	}
+
+	if(startDate) {
+		editBooking.startDate = startDate
+	}
+	if(endDate) {
+		editBooking.endDate = endDate
+	}
+
+	await editBooking.save()
+
+	res.json({
+		message: "Successfully edited your booking!",
+		data: editBooking
+	})
+})
+
 //DELETE A BOOKING
 router.delete('/:bookingId', async(req, res, next) => {
 	const deadBooking = await Booking.findOne({where: {id: req.params.bookingId, userId: req.user.id}});

@@ -221,8 +221,6 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 		})
 	}
 
-
-
 	const newBooking = await Booking.create({
 		userId: req.user.id,
 		spotId: spot.id,
@@ -233,6 +231,31 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 	res.json(newBooking)
 })
 
+
+//GET ALL BOOKINGS FOR A SPOT
+router.get('/:spotId/bookings', async(req, res, next) => {
+	const spot = await Spot.findOne({
+		where: {
+			id: req.params.spotId,
+		},
+			attributes: ['id'],
+		  include: {
+			 model: Booking,
+			 attributes: ['startDate', 'endDate']
+		}
+	})
+
+
+	if(!spot) {
+		console.log("TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		next({
+			status: 404,
+			message: "Spot couldn't be found"
+		})
+	}
+
+	res.json(spot)
+})
 
 
 //CREATE REVIEW FOR SPOT BASED ON ID

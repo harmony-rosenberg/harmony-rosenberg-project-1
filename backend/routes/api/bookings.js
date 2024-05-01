@@ -76,13 +76,33 @@ router.put('/:bookingId', async(req, res, next) => {
 
 //DELETE A BOOKING
 router.delete('/:bookingId', async(req, res, next) => {
-	const deadBooking = await Booking.findOne({where: {id: req.params.bookingId, userId: req.user.id}});
+	const deadBooking = await Booking.findOne({where: {id: req.params.bookingId}, include: {model: Spot}});
+	const spot = await deadBooking.getSpot()
 
 	if(!deadBooking) {
 		next({
 			status: 404,
 			message: "Booking not found"
 		})
+	}
+
+	console.log(spot)
+	if(deadBooking.userId !== req.user.id && spot.ownerId !== req.user.id) {
+		throw new Error(
+			next({
+				status: 403,
+				message: "Must be owner of spot or owner of booking to delete"
+			})
+		)
+	}
+
+	if(deadBooking.startDate < Date.now()) {
+		throw new Error(
+			next({
+				status: 400,
+				message: "Can not delete a booking once it has started or passed"
+			})
+		)
 	}
 
 	await deadBooking.destroy();

@@ -28,30 +28,50 @@ router.get('/current', async(req, res, next) => {
 
 //EDIT A BOOKING
 router.put('/:bookingId', async(req, res, next) => {
-	let {startDate, endDate} = req.body;
+	try {
+		let {startDate, endDate} = req.body;
 
-	const editBooking = await Booking.findOne({where: {id: req.params.bookingId}});
+		const editBooking = await Booking.findOne({where: {id: req.params.bookingId}});
 
-	if(!editBooking) {
-		next({
-			status: 404,
-			message: "Booking couldn't be found"
+		console.log(editBooking.endDate)
+
+		if(editBooking.endDate < Date.now()) {
+			throw new Error(
+				next({
+					status: 400,
+					message: "This booking has already passed"
+				})
+			)
+		}
+
+		if(!editBooking) {
+			next({
+				status: 404,
+				message: "Booking couldn't be found"
+			})
+		}
+
+		if(startDate) {
+			editBooking.startDate = startDate
+		}
+		if(endDate) {
+			editBooking.endDate = endDate
+		}
+
+		await editBooking.save()
+
+		res.json({
+			message: "Successfully edited your booking!",
+			data: editBooking
 		})
+	} catch {
+		throw new Error(
+			next({
+				status: 403,
+				message: "Booking already exists for this time"
+			})
+		)
 	}
-
-	if(startDate) {
-		editBooking.startDate = startDate
-	}
-	if(endDate) {
-		editBooking.endDate = endDate
-	}
-
-	await editBooking.save()
-
-	res.json({
-		message: "Successfully edited your booking!",
-		data: editBooking
-	})
 })
 
 //DELETE A BOOKING

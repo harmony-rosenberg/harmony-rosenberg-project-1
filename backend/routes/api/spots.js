@@ -195,12 +195,6 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 
 		const spot = await Spot.findOne({where: {id: req.params.spotId}, include: Booking})
 
-		const currBooking = await spot.getBookings()
-
-		// let currStartDate = currBooking[0].dataValues.startDate.toString()
-		// let currEndDate = currBooking[0].dataValues.endDate.toString()
-		// console.log('TEST --------------->', currStartDate, startDate)
-
 		if(!spot) {
 			next({
 				status: 404,

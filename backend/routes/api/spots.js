@@ -9,27 +9,24 @@ router.get('/', async (req, res) => {
 	let spotData = []
 
 	let spots = await Spot.findAll({
-		// include: [{
-		// 	model: Review
-		// }, {
-		// 	model: spotImage
-		// }]
+		include: [{
+			model: Review
+		}, {
+			model: spotImage
+		}]
 	})
 
 	for(let i = 0; i < spots.length; i++) {
 		const spot = spots[i];
-		const reviewData = {
-			review: spot.Reviews
-		}
 
-		console.log('TEST -------------->', reviewData)
-		spotData.push (reviewData)
+		console.log('TEST -------------->', spot.Reviews[i].dataValues.stars)
+		// spotData.push (reviewData)
 	}
 
 
 	spotData = []
 
-	res.json(spotData)
+	res.json(spots)
 })
 
 
@@ -155,7 +152,8 @@ router.put('/:spotId', async(req, res, next) => {
 	} catch(err) {
 		next({
 			status: 400,
-			message: "something went wrong buddy"
+			details: err.errors ? err.errors.map(item => item.message).join(', ') : err.message,
+			message: `${err.message}`,
 		})
 	}
 })
@@ -197,12 +195,10 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 	const spot = await Spot.findOne({where: {id: req.params.spotId}, include: Booking})
 
 	const currBooking = await spot.getBookings()
-	
+
 	// let currStartDate = currBooking[0].dataValues.startDate.toString()
 	// let currEndDate = currBooking[0].dataValues.endDate.toString()
 	// console.log('TEST --------------->', currStartDate, startDate)
-
-
 
 	if(!spot) {
 		next({
@@ -233,42 +229,65 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 
 //GET ALL BOOKINGS FOR A SPOT
 router.get('/:spotId/bookings', async(req, res, next) => {
+	let payLoad = {}
+
 	const spot = await Spot.findOne({
 		where: {
 			id: req.params.spotId,
-		},
-			attributes: ['id'],
-		  include: {
-			 model: Booking,
-			 attributes: ['startDate', 'endDate']
+		}, include: {
+			model: Booking,
+			attributes: ['spotId', 'startDate', 'endDate']
 		}
 	})
 
+	if(!spot) {
+		throw new Error(
+			next({
+				status: 404,
+				message: "Spot couldn't be found"
+			})
+		)
+	}
+
+	const currBookings = await spot.getBookings({include: {
+		model: User,
+		attributes: ['id', 'firstName', 'lastName']
+	}})
+
+	if(spot.dataValues.ownerId === req.user.id) {
+		payLoad = currBookings
+	} else {
+		payLoad = spot.Bookings
+	}
+	res.json(payLoad)
+
+})
+
+
+//CREATE REVIEW FOR SPOT BASED ON ID
+router.post('/:spotId/reviews', async(req, res, next) => {
+try {
+	let {review, stars} = req.body
+
+	const spot = await Spot.findOne({where: {id: req.params.spotId}, include: {model: Review}})
 
 	if(!spot) {
-		console.log("TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		next({
 			status: 404,
 			message: "Spot couldn't be found"
 		})
 	}
 
-	res.json(spot)
-})
-
-
-//CREATE REVIEW FOR SPOT BASED ON ID
-router.post('/:spotId/reviews', async(req, res, next) => {
-
-	let {review, stars} = req.body
-
-	const spot = await Spot.findOne({where: {id: req.params.spotId}})
-
-	if(!spot) {
-		next({
-			status: 404,
-			message: "Spot couldn't be found"
-		})
+	if(spot.Reviews.length > 0) {
+		for(let i = 0; i < spot.Reviews.length; i++) {
+			let currReview = spot.Reviews[i]
+			if(currReview.userId === req.user.id) {
+				throw new Error(next({
+					status: 403,
+					message: "User already has a review for this spot"
+				}))
+			}
+		}
 	}
 
 	const newReview = await Review.create({
@@ -279,6 +298,13 @@ router.post('/:spotId/reviews', async(req, res, next) => {
 	})
 
 	res.json(newReview)
+} catch(err) {
+	next({
+		status: 400,
+		details: err.errors ? err.errors.map(item => item.message).join(', ') : err.message,
+		message: `${err.message}`,
+	})
+}
 })
 
 //GET REVIEWS BASED ON SPOT ID

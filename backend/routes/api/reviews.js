@@ -65,6 +65,8 @@ router.post('/:reviewId/images', async(req, res, next) => {
 		where: {
 			id: req.params.reviewId,
 			userId: req.user.id
+		}, include: {
+			model: reviewImage
 		}
 	})
 
@@ -74,15 +76,28 @@ router.post('/:reviewId/images', async(req, res, next) => {
 			message: "Couldn't find review"
 		})
 	}
+	console.log(currReview.reviewImages)
 
-	console.log(currReview)
+	if(currReview.reviewImages.length >= 5) {
+		throw new Error(
+			next({
+				status: 403,
+				message: "Maximum number of images reached"
+			})
+		)
+	}
 
 	const newImage = await reviewImage.create({
 		reviewId: req.params.reviewId,
-		url: "new image url here"
+		url
 	})
 
-	res.json(newImage)
+	const payLoad = {
+		id: newImage.id,
+		url: newImage.url
+	}
+
+	res.json(payLoad)
 
 })
 

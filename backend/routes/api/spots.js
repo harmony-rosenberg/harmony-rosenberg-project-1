@@ -1,11 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize} = require('../../db/models');
+const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize,} = require('../../db/models');
+const { Op } = require('sequelize');
 
 
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
+	let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
+
+	if(!page) {page = 1}
+	if(!size) {size = 5}
+
+	let pagination = {}
+	pagination.limit = size
+	pagination.offset = size * (page -1)
+
 	let spots = await Spot.findAll({
+		where: {
+		// 	[Op.or]: {
+		// 		// lat: {[Op.lt]: req.query.maxLat},
+		// 		// lat: {[Op.gt]: req.query.minLat},
+		// 		// lng: {[Op.lt]: req.query.maxLng},
+		// 		// lng: {[Op.gt]: req.query.minLng},
+				price: {[Op.lt]: req.query.maxPrice},
+		// 		// price: {[Op.gt]: req.query.minPrice},
+		// 	}
+		},
 		include: [{
 			model: Review,
 			attributes: ['stars']
@@ -14,7 +34,8 @@ router.get('/', async (req, res) => {
 		}, {
 			model: spotImage,
 			attributes: ['url']
-		}]
+		}],
+		...pagination
 	})
 
 	let avgVal = function(arr) {

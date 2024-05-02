@@ -1,45 +1,103 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, spotImage, Review, User, reviewImage, Booking} = require('../../db/models');
+const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize} = require('../../db/models');
 
 
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
 
-	let spotData = []
-
 	let spots = await Spot.findAll({
 		include: [{
-			model: Review
+			model: Review,
+			attributes: ['stars']
+			// as: 'rating',
+			// attributes: [Sequelize.fn('AVG', Sequelize.col('Reviews.stars'), 'rating')]
 		}, {
-			model: spotImage
+			model: spotImage,
+			attributes: ['url']
 		}]
 	})
 
-	for(let i = 0; i < spots.length; i++) {
-		const spot = spots[i];
-
-		console.log('TEST -------------->', spot.Reviews[i].dataValues.stars)
-		// spotData.push (reviewData)
+	let avgVal = function(arr) {
+		let totalStars = 0
+			for(let j = 0; j < arr.length; j++) {
+				let stars = arr[j].stars
+				console.log('TEST 1 --------------->', stars)
+				totalStars += stars
+			}
+			return totalStars/arr.length
 	}
 
+	let spotData = spots.map(spot => {
+		return {
+			['id'] : spot.id,
+			['ownerId']: spot.ownerId,
+			['address']: spot.address,
+			['city']: spot.city,
+			['state']: spot.state,
+			['country']: spot.country,
+			['lat']: spot.lat,
+			['lng']: spot.lng,
+			['name']: spot.name,
+			['description']: spot.description,
+			['price']: spot.price,
+			['createdAt']: spot.createdAt,
+			['updatedAt']: spot.updatedAt,
+			['previewImage']: spot.spotImages[0].url,
+			['avg-rating']: avgVal(spot.Reviews)
+		}
+	})
 
-	spotData = []
-
-	res.json(spots)
+	res.json(spotData)
 })
 
 
 //GET ALL SPOTS FOR CURRENT USER
 router.get('/current', async (req, res, next) => {
-
-	const userSpots = await Spot.findAll({
+	const spots = await Spot.findAll({
 		where: {
 			ownerId: req.user.id
+		}, include: [{
+			model: Review,
+			attributes: ['stars']
+		}, {
+			model: spotImage,
+			attributes: ['url']
+		}]
+	})
+
+
+	let avgVal = function(arr) {
+		let totalStars = 0
+			for(let j = 0; j < arr.length; j++) {
+				let stars = arr[j].stars
+				console.log('TEST 1 --------------->', stars)
+				totalStars += stars
+			}
+			return totalStars/arr.length
+	}
+
+	let spotData = spots.map(spot => {
+		return {
+			['id'] : spot.id,
+			['ownerId']: spot.ownerId,
+			['address']: spot.address,
+			['city']: spot.city,
+			['state']: spot.state,
+			['country']: spot.country,
+			['lat']: spot.lat,
+			['lng']: spot.lng,
+			['name']: spot.name,
+			['description']: spot.description,
+			['price']: spot.price,
+			['createdAt']: spot.createdAt,
+			['updatedAt']: spot.updatedAt,
+			['previewImage']: spot.spotImages[0].url,
+			['avg-rating']: avgVal(spot.Reviews)
 		}
 	})
 
-	res.json(userSpots)
+	res.json(spotData)
 })
 
 //GET DETAILS FOR SPOT FROM ID

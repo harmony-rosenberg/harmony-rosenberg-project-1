@@ -5,7 +5,6 @@ const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize} = requir
 
 //GET ALL SPOTS
 router.get('/', async (req, res) => {
-
 	let spots = await Spot.findAll({
 		include: [{
 			model: Review,
@@ -22,7 +21,6 @@ router.get('/', async (req, res) => {
 		let totalStars = 0
 			for(let j = 0; j < arr.length; j++) {
 				let stars = arr[j].stars
-				console.log('TEST 1 --------------->', stars)
 				totalStars += stars
 			}
 			return totalStars/arr.length
@@ -66,12 +64,10 @@ router.get('/current', async (req, res, next) => {
 		}]
 	})
 
-
 	let avgVal = function(arr) {
 		let totalStars = 0
 			for(let j = 0; j < arr.length; j++) {
 				let stars = arr[j].stars
-				console.log('TEST 1 --------------->', stars)
 				totalStars += stars
 			}
 			return totalStars/arr.length
@@ -102,7 +98,6 @@ router.get('/current', async (req, res, next) => {
 
 //GET DETAILS FOR SPOT FROM ID
 router.get('/:id', async (req, res, next) => {
-
 		const spot = await Spot.findOne({
 			where: {
 				id: req.params.id
@@ -112,6 +107,8 @@ router.get('/:id', async (req, res, next) => {
 			}, {
 				model: User,
 				attributes: ['id', 'firstName', 'lastName']
+			}, {
+				model: Review
 			}]
 		})
 
@@ -121,7 +118,37 @@ router.get('/:id', async (req, res, next) => {
 				message: "Couldn't find spot!"
 				}))
 		}
-		res.json(spot)
+
+		let avgVal = function(arr) {
+			let totalStars = 0
+				for(let j = 0; j < arr.length; j++) {
+					let stars = arr[j].stars
+					totalStars += stars
+				}
+				return totalStars/arr.length
+		}
+
+		let spotData = {
+			['id'] : spot.id,
+			['ownerId']: spot.ownerId,
+			['address']: spot.address,
+			['city']: spot.city,
+			['state']: spot.state,
+			['country']: spot.country,
+			['lat']: spot.lat,
+			['lng']: spot.lng,
+			['name']: spot.name,
+			['description']: spot.description,
+			['price']: spot.price,
+			['createdAt']: spot.createdAt,
+			['updatedAt']: spot.updatedAt,
+			['numReviews']: spot.Reviews.length,
+			['avgStarRating']: avgVal(spot.Reviews),
+			['spotImages']: spot.spotImages,
+			['owner']: spot.User
+		}
+
+		res.json(spotData)
 })
 
 
@@ -219,7 +246,6 @@ router.put('/:spotId', async(req, res, next) => {
 
 //ADD IMAGE TO SPOT BASED ON ID
 router.post('/:spotId/images', async(req, res, next) => {
-
 	let {url, previewImage} = req.body
 
 	const spot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});

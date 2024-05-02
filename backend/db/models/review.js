@@ -27,11 +27,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     review: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      },
     },
     stars: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isDecimal: true,
+        notEmpty: true
+      },
     },
   }, {
     sequelize,

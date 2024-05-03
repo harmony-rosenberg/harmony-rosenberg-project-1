@@ -1,11 +1,82 @@
 const express = require('express');
 const router = express.Router();
-const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize} = require('../../db/models');
+const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize,} = require('../../db/models');
+const { Op } = require('sequelize');
 
 
 //GET ALL SPOTS
-router.get('/', async (req, res) => {
-	let spots = await Spot.findAll({
+router.get('/', async (req, res, next) => {
+	let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
+
+	if(!page) {page = 1}
+	if(!size) {size = 5}
+
+	let pagination = {}
+	pagination.limit = size
+	pagination.offset = size * (page -1)
+
+	let filters = {}
+
+	if(!minLat) {
+		minLat = 1
+	}
+	if(!minLng) {
+		minLng = 1
+	}
+	if(!minPrice) {
+		minPrice = 1
+	}
+	if(!maxLat) {
+		maxLat = 1000000
+	}
+	if(!maxLng) {
+		maxLng = 1000000
+	}
+	if(!maxPrice) {
+		maxPrice = 1000000
+	}
+
+	if(maxLat || minLat) {
+		filters.lat = {[Op.lt]: maxLat, [Op.gt]: minLat}
+}
+
+	if(maxLng || minLng) {
+		filters.lng = {[Op.lt]: maxLng, [Op.gt]: minLng}
+	}
+
+	if(maxPrice || minPrice) {
+		filters.price = {[Op.lt]: maxPrice, [Op.gt]: minPrice}
+	}
+
+	let queryErrors = {
+		"message": "Bad Request",
+		"errors": {}
+	}
+
+	if(isNaN(minLat) || minLat < 1) {
+		queryErrors.errors['minLat'] = "Minimum latitude is invalid"
+	}
+	if(isNaN(maxLat) || maxLat > 1000000) {
+		queryErrors.errors['maxLat'] = "Maximum latitude is invalid"
+	}
+	if(isNaN(minLng) || minLng < 1) {
+		queryErrors.errors['minLng'] = "Minimum longitude is invalid"
+	}
+	if(isNaN(maxLng) || maxLng > 1000000) {
+		queryErrors.errors['maxLng'] = "Maximum longitude is invalid"
+	}
+	if(isNaN(minPrice) || minPrice < 1) {
+		queryErrors.errors['minPrice'] = "Minimum price is invalid"
+	}
+	if(isNaN(maxPrice) || maxPrice > 1000000) {
+		queryErrors.errors['maxPrice'] = "Maximum price is invalid"
+	}
+
+	try {
+		let spots = await Spot.findAll({
+			where: {
+				...filters
+			},
 		include: [{
 			model: Review,
 			attributes: ['stars']
@@ -14,8 +85,10 @@ router.get('/', async (req, res) => {
 		}, {
 			model: spotImage,
 			attributes: ['url']
-		}]
+		}],
+		...pagination,
 	})
+
 
 	let avgVal = function(arr) {
 		let totalStars = 0
@@ -42,11 +115,18 @@ router.get('/', async (req, res) => {
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
 			['previewImage']: spot.spotImages[0].url,
-			['avg-rating']: avgVal(spot.Reviews)
+			['avg-rating']: avgVal(spot.Reviews),
+			['page']: page,
+			['size']: size
 		}
 	})
 
 	res.json(spotData)
+	} catch {
+		next({
+			...queryErrors
+		})
+	}
 })
 
 
@@ -89,7 +169,7 @@ router.get('/current', async (req, res, next) => {
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
 			['previewImage']: spot.spotImages[0].url,
-			['avg-rating']: avgVal(spot.Reviews)
+			['avg-rating']: avgVal(spot.Reviews),
 		}
 	})
 
@@ -145,7 +225,7 @@ router.get('/:id', async (req, res, next) => {
 			['numReviews']: spot.Reviews.length,
 			['avgStarRating']: avgVal(spot.Reviews),
 			['spotImages']: spot.spotImages,
-			['owner']: spot.User
+			['owner']: spot.User,
 		}
 
 		res.json(spotData)

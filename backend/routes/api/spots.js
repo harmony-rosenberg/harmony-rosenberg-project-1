@@ -391,7 +391,7 @@ router.put('/:spotId', async(req, res, next) => {
 
 //ADD IMAGE TO SPOT BASED ON ID
 router.post('/:spotId/images', async(req, res, next) => {
-	let {url} = req.body
+	let {url, previewImage} = req.body
 
 	const spot = await Spot.findOne({
 		where: {
@@ -409,27 +409,28 @@ router.post('/:spotId/images', async(req, res, next) => {
 		})
 	}
 
-	let preview
+	// let preview
 
-		for(let i = 0; i < spot.spotImages.length; i++) {
-			if(spot.spotImages[i].dataValues.previewImage || spot.spotImages[i].dataValues.previewImage === null) {
-				preview = true
-			} else {
-				preview = false
-			}
-		}
+	// for(let i = 0; i < spot.spotImages.length; i++) {
+	// 	if(!spot.spotImages[i].dataValues.previewImage || spot.spotImages[i].dataValues.previewImage === null) {
+	// 			console.log('TEST -->', spot.spotImages[i].dataValues.previewImage)
+	// 			preview = true
+	// 		} else {
+	// 			preview = false
+	// 		}
+	// 	}
 
 	const image = await spotImage.create({
 		spotId: spot.id,
 		url,
-		previewImage: preview
+		previewImage
 	})
 
 
 	const payload = {
 		id: image.id,
 		url: image.url,
-		preview: preview
+		preview: previewImage
 	}
 
 	res.json(payload)

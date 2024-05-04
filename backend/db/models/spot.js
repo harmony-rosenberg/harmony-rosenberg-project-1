@@ -56,7 +56,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: [6],
-        isNumeric: true
+        isNumeric: true,
+        max: 90,
+        min: -89
       }
     },
     lng: {
@@ -64,14 +66,16 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: [6],
-        isNumeric: true
+        isNumeric: true,
+        max: 180,
+        min: -179
       }
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [5, 40],
+        len: [1, 50],
       }
     },
     description: {

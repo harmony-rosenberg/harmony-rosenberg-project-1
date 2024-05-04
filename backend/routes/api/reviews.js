@@ -68,9 +68,7 @@ router.put('/:reviewId', async(req, res, next) => {
 			...errorResponse
 		})
 	}
-
 })
-
 
 //ADD IMAGE TO REVIEW
 router.post('/:reviewId/images', async(req, res, next) => {

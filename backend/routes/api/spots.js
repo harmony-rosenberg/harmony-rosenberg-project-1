@@ -129,7 +129,6 @@ router.get('/', async (req, res, next) => {
 	}
 })
 
-
 //GET ALL SPOTS FOR CURRENT USER
 router.get('/current', async (req, res, next) => {
 	const spots = await Spot.findAll({
@@ -231,14 +230,46 @@ router.get('/:id', async (req, res, next) => {
 		res.json(spotData)
 })
 
-
 //CREATE A SPOT
 router.post('/', async (req, res, next) => {
-		try {
-		const {ownerId, address, city, state, country, lat, lng, name, description, price} = req.body
+	const {address, city, state, country, lat, lng, name, description, price} = req.body
 
-		const newSpot = await Spot.create({
-			ownerId,
+	const errorResponse = {
+		"message": "Bad Request",
+		"errors": {}
+	}
+	if(!address) {
+		errorResponse.errors['address'] = "Street address is required"
+	}
+	if(!city) {
+		errorResponse.errors['city'] = "City is required"
+	}
+	if(!state) {
+		errorResponse.errors['state'] = "State is required"
+	}
+	if(!country) {
+		errorResponse.errors['country'] = "Country is required"
+	}
+	if(!lat || lat.match(/[a-z]/i)) {
+		errorResponse.errors['lat'] = "Latitude is not valid"
+	}
+	if(!lng || lng.match(/[a-z]/i)) {
+		errorResponse.errors['lng'] = "Longitude is not valid"
+	}
+	if(name.length > 50) {
+		console.log(name)
+		errorResponse.errors['name'] = "Name must be less than 50 characters"
+	}
+	if(!description) {
+		errorResponse.errors['description'] = "Description is required"
+	}
+	if(!price) {
+		errorResponse.errors['price'] = "Price per day is required"
+	}
+
+			try {
+			const newSpot = await Spot.create({
+			ownerId: req.user.id,
 			address,
 			city,
 			state,
@@ -250,17 +281,14 @@ router.post('/', async (req, res, next) => {
 			price
 		});
 
-		await newSpot.validate();
+	await newSpot.validate();
 
-		res.json({
-			message: "success!",
-			data: newSpot
-		})
+	res.json({newSpot})
 
-	} catch(err) {
+	} catch {
 		next({
 			status: 404,
-			message: "you messed something up, buddy!"
+			...errorResponse
 		})
 	}
 })
@@ -307,6 +335,7 @@ router.put('/:spotId', async(req, res, next) => {
 		if(price) {
 			editSpot.price = price
 		}
+
 
 		await editSpot.save()
 

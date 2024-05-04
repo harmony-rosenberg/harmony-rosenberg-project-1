@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize,} = require('../../db/models');
 const { Op } = require('sequelize');
+const { requireAuth } = require('../../utils/auth');
 
 
 //GET ALL SPOTS
@@ -17,20 +18,20 @@ router.get('/', async (req, res, next) => {
 
 	let filters = {}
 
+	if(!maxLat) {
+		maxLat = 90
+	}
 	if(!minLat) {
-		minLat = 1
+		minLat = -90
+	}
+	if(!maxLng) {
+		maxLng = 180
 	}
 	if(!minLng) {
-		minLng = 1
+		minLng = -180
 	}
 	if(!minPrice) {
 		minPrice = 1
-	}
-	if(!maxLat) {
-		maxLat = 1000000
-	}
-	if(!maxLng) {
-		maxLng = 1000000
 	}
 	if(!maxPrice) {
 		maxPrice = 1000000
@@ -49,27 +50,52 @@ router.get('/', async (req, res, next) => {
 	}
 
 	let queryErrors = {
+		status: 400,
 		"message": "Bad Request",
 		"errors": {}
 	}
 
-	if(isNaN(minLat) || minLat < 1) {
-		queryErrors.errors['minLat'] = "Minimum latitude is invalid"
-	}
-	if(isNaN(maxLat) || maxLat > 1000000) {
+	let errorCount = 0
+
+	if(isNaN(maxLat) || maxLat > 90 || maxLat < -89) {
 		queryErrors.errors['maxLat'] = "Maximum latitude is invalid"
+		errorCount++
 	}
-	if(isNaN(minLng) || minLng < 1) {
-		queryErrors.errors['minLng'] = "Minimum longitude is invalid"
+	if(isNaN(minLat) || minLat < -90 || minLat > 89) {
+		queryErrors.errors['minLat'] = "Minimum latitude is invalid"
+		errorCount++
 	}
-	if(isNaN(maxLng) || maxLng > 1000000) {
+	if(isNaN(maxLng) || maxLng > 180 || maxLng < -179) {
 		queryErrors.errors['maxLng'] = "Maximum longitude is invalid"
+		errorCount++
+	}
+	if(isNaN(minLng) || minLng < -180 || minLng > 179) {
+		queryErrors.errors['minLng'] = "Minimum longitude is invalid"
+		errorCount++
+	}
+	if(isNaN(maxPrice) || maxPrice < 1 || maxPrice > 1000000) {
+		queryErrors.errors['maxPrice'] = "Maximum price is invalid"
+		errorCount++
 	}
 	if(isNaN(minPrice) || minPrice < 1) {
 		queryErrors.errors['minPrice'] = "Minimum price is invalid"
+		errorCount++
 	}
-	if(isNaN(maxPrice) || maxPrice > 1000000) {
-		queryErrors.errors['maxPrice'] = "Maximum price is invalid"
+	if(isNaN(page) || page < 1) {
+		queryErrors.errors['page'] = "Page must be greater than or equal to 1"
+		errorCount++
+	}
+	if(isNaN(size) || size < 1) {
+		queryErrors.errors['size'] = "Size must be greater than or equal to 1"
+		errorCount++
+	}
+
+	if(errorCount > 0) {
+		throw new Error(
+			next({
+				...queryErrors
+			})
+		)
 	}
 
 	try {
@@ -129,7 +155,6 @@ router.get('/', async (req, res, next) => {
 	}
 })
 
-
 //GET ALL SPOTS FOR CURRENT USER
 router.get('/current', async (req, res, next) => {
 	const spots = await Spot.findAll({
@@ -140,9 +165,11 @@ router.get('/current', async (req, res, next) => {
 			attributes: ['stars']
 		}, {
 			model: spotImage,
-			attributes: ['url']
 		}]
 	})
+
+
+	console.log(spots.spotImages)
 
 	let avgVal = function(arr) {
 		let totalStars = 0
@@ -151,7 +178,8 @@ router.get('/current', async (req, res, next) => {
 				totalStars += stars
 			}
 			return totalStars/arr.length
-	}
+		}
+
 
 	let spotData = spots.map(spot => {
 		return {
@@ -172,6 +200,7 @@ router.get('/current', async (req, res, next) => {
 			['avg-rating']: avgVal(spot.Reviews),
 		}
 	})
+
 
 	res.json(spotData)
 })
@@ -231,14 +260,46 @@ router.get('/:id', async (req, res, next) => {
 		res.json(spotData)
 })
 
-
 //CREATE A SPOT
 router.post('/', async (req, res, next) => {
-		try {
-		const {ownerId, address, city, state, country, lat, lng, name, description, price} = req.body
+	const {address, city, state, country, lat, lng, name, description, price} = req.body
 
-		const newSpot = await Spot.create({
-			ownerId,
+	const errorResponse = {
+		"message": "Bad Request",
+		"errors": {}
+	}
+	if(!address) {
+		errorResponse.errors['address'] = "Street address is required"
+	}
+	if(!city) {
+		errorResponse.errors['city'] = "City is required"
+	}
+	if(!state) {
+		errorResponse.errors['state'] = "State is required"
+	}
+	if(!country) {
+		errorResponse.errors['country'] = "Country is required"
+	}
+	if(!lat || lat.toString().match(/[a-z]/i)) {
+		errorResponse.errors['lat'] = "Latitude is not valid"
+	}
+	if(!lng || lng.toString().match(/[a-z]/i)) {
+		errorResponse.errors['lng'] = "Longitude is not valid"
+	}
+	if(name.length > 50) {
+		console.log(name)
+		errorResponse.errors['name'] = "Name must be less than 50 characters"
+	}
+	if(!description) {
+		errorResponse.errors['description'] = "Description is required"
+	}
+	if(!price) {
+		errorResponse.errors['price'] = "Price per day is required"
+	}
+
+			try {
+			const newSpot = await Spot.create({
+			ownerId: req.user.id,
 			address,
 			city,
 			state,
@@ -250,27 +311,58 @@ router.post('/', async (req, res, next) => {
 			price
 		});
 
-		await newSpot.validate();
+	await newSpot.validate();
 
-		res.json({
-			message: "success!",
-			data: newSpot
-		})
+	res.json({newSpot})
 
-	} catch(err) {
+	} catch {
 		next({
-			status: 404,
-			message: "you messed something up, buddy!"
+			status: 400,
+			...errorResponse
 		})
 	}
 })
 
-
 //EDIT A SPOT
 router.put('/:spotId', async(req, res, next) => {
-	try {
-		let {address, city, state, country, lat, lng, name, description, price} = req.body
+	let {address, city, state, country, lat, lng, name, description, price} = req.body
 
+	let errorResponse = {
+		status: 400,
+		"message": "Bad Request",
+		"errors": {}
+	}
+
+	if(!address) {
+		errorResponse.errors['address'] = "Street address is required"
+	}
+	if(!city) {
+		errorResponse.errors['city'] = "City is required"
+	}
+	if(!state) {
+		errorResponse.errors['state'] = "State is required"
+	}
+	if(!country) {
+		errorResponse.errors['country'] = "Country is required"
+	}
+	if(!lat || lat.toString().match(/[a-z]/i)) {
+		errorResponse.errors['lat'] = "Latitude is not valid"
+	}
+	if(!lng || lng.toString().match(/[a-z]/i)) {
+		errorResponse.errors['lng'] = "Longitude is not valid"
+	}
+	if(name.length > 50) {
+		console.log(name)
+		errorResponse.errors['name'] = "Name must be less than 50 characters"
+	}
+	if(!description) {
+		errorResponse.errors['description'] = "Description is required"
+	}
+	if(!price) {
+		errorResponse.errors['price'] = "Price per day is required"
+	}
+
+	try {
 		const editSpot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
 
 		if(!editSpot) {
@@ -279,56 +371,41 @@ router.put('/:spotId', async(req, res, next) => {
 				message: "Spot couldn't be found"
 			})
 		}
-
-		if(address) {
+			editSpot.ownerId = req.user.id
 			editSpot.address = address
-		}
-		if(city) {
 			editSpot.city = city
-		}
-		if(state) {
 			editSpot.state = state
-		}
-		if(country) {
 			editSpot.country = country
-		}
-		if(lat) {
 			editSpot.lat = lat
-		}
-		if(lng) {
 			editSpot.lng = lng
-		}
-		if(name) {
 			editSpot.name = name
-		}
-		if(description) {
 			editSpot.description = description
-		}
-		if(price) {
 			editSpot.price = price
-		}
 
 		await editSpot.save()
 
 		res.json({
-			message: "successfully edited your spot!",
-			data: editSpot
+			editSpot
 		})
 	} catch(err) {
 		next({
-			status: 400,
-			details: err.errors ? err.errors.map(item => item.message).join(', ') : err.message,
-			message: `${err.message}`,
+			...errorResponse
 		})
 	}
 })
-
 
 //ADD IMAGE TO SPOT BASED ON ID
 router.post('/:spotId/images', async(req, res, next) => {
 	let {url, previewImage} = req.body
 
-	const spot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
+	const spot = await Spot.findOne({
+		where: {
+			id: req.params.spotId,
+			ownerId: req.user.id
+		}, include: {
+			model: spotImage
+		}
+	});
 
 	if(!spot) {
 		next({
@@ -337,16 +414,28 @@ router.post('/:spotId/images', async(req, res, next) => {
 		})
 	}
 
+	// let preview
+
+	// for(let i = 0; i < spot.spotImages.length; i++) {
+	// 	if(!spot.spotImages[i].dataValues.previewImage || spot.spotImages[i].dataValues.previewImage === null) {
+	// 			console.log('TEST -->', spot.spotImages[i].dataValues.previewImage)
+	// 			preview = true
+	// 		} else {
+	// 			preview = false
+	// 		}
+	// 	}
+
 	const image = await spotImage.create({
 		spotId: spot.id,
 		url,
 		previewImage
 	})
 
+
 	const payload = {
 		id: image.id,
 		url: image.url,
-		previewImage: image.previewImage
+		preview: previewImage
 	}
 
 	res.json(payload)
@@ -431,8 +520,21 @@ router.get('/:spotId/bookings', async(req, res, next) => {
 
 //CREATE REVIEW FOR SPOT BASED ON ID
 router.post('/:spotId/reviews', async(req, res, next) => {
-try {
 	let {review, stars} = req.body
+
+	let errorResponse = {
+		"message": "Bad Request",
+		errors: {}
+	}
+
+	if(!review || review === '') {
+		errorResponse.errors['review'] = "Review text is required"
+	}
+	if(!stars || stars < 1 || stars > 5) {
+		errorResponse.errors['stars'] = "Stars must be an integer from 1 to 5"
+	}
+
+try {
 
 	const spot = await Spot.findOne({where: {id: req.params.spotId}, include: {model: Review}})
 
@@ -466,8 +568,7 @@ try {
 } catch(err) {
 	next({
 		status: 400,
-		details: err.errors ? err.errors.map(item => item.message).join(', ') : err.message,
-		message: `${err.message}`,
+		...errorResponse
 	})
 }
 })

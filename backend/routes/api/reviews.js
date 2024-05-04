@@ -31,30 +31,44 @@ router.get('/current', async(req, res, next) => {
 router.put('/:reviewId', async(req, res, next) => {
 	let {review, stars} = req.body
 
-	const editReview = await Review.findOne({where: {id: req.params.reviewId, userId: req.user.id}})
+	let errorResponse = {
+		"message": "Bad Request",
+		errors: {}
+	}
 
-	if(!editReview) {
+	if(!review || review === '') {
+		errorResponse.errors['review'] = "Review text is required"
+	}
+	if(!stars || stars < 1 || stars > 5) {
+		errorResponse.errors['stars'] = "Stars must be an integer from 1 to 5"
+	}
+
+	try {
+		const editReview = await Review.findOne({where: {id: req.params.reviewId, userId: req.user.id}})
+
+		if(!editReview) {
+			next({
+				status: 404,
+				message: "Review couldn't be found"
+			})
+		}
+
+		editReview.review = review
+		editReview.stars = stars
+
+		await editReview.save()
+
+		res.json({
+			message: "Successfully edited your review!",
+			data: editReview
+		})
+	} catch{
 		next({
-			status: 404,
-			message: "Review couldn't be found"
+			status: 400,
+			...errorResponse
 		})
 	}
-
-	if(review) {
-		editReview.review = review
-	}
-	if(stars) {
-		editReview.stars = stars
-	}
-
-	await editReview.save()
-
-	res.json({
-		message: "Successfully edited your review!",
-		data: editReview
-	})
 })
-
 
 //ADD IMAGE TO REVIEW
 router.post('/:reviewId/images', async(req, res, next) => {

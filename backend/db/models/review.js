@@ -37,7 +37,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isDecimal: true,
-        notEmpty: true
+        notEmpty: true,
+        min: 1,
+        max: 5
       },
     },
   }, {

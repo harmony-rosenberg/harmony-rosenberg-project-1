@@ -28,29 +28,58 @@ router.get('/current', async(req, res, next) => {
 
 //EDIT A BOOKING
 router.put('/:bookingId', async(req, res, next) => {
-	try {
-		let {startDate, endDate} = req.body;
+	let {startDate, endDate} = req.body;
 
-		const editBooking = await Booking.findOne({where: {id: req.params.bookingId}});
+	const editBooking = await Booking.findOne({where: {id: req.params.bookingId}});
 
-		console.log(editBooking.endDate)
+	let errorResponse = {
+		"status": 403,
+		"message": "Sorry, this spot is already booked for the specified dates",
+		"errors": {}
+	}
 
-		if(editBooking.endDate < Date.now()) {
-			throw new Error(
-				next({
-					status: 400,
-					message: "This booking has already passed"
-				})
-			)
-		}
+	if(!editBooking) {
+		next({
+			status: 404,
+			message: "Booking couldn't be found"
+		})
+	}
 
-		if(!editBooking) {
+	if(editBooking.dataValues.endDate < Date.now()) {
 			next({
-				status: 404,
-				message: "Booking couldn't be found"
+				status: 403,
+				message: "This booking has already passed"
 			})
+		// )
+	}
+
+	if(startDate > endDate) {
+			next({
+				status: 400,
+				"message": "Bad Request",
+				errors: "endDate cannot come before startDate"
+
+			})
+	}
+		const spot = await editBooking.getSpot({include: {model: Booking}})
+
+	// console.log('TEST --------->', editBooking.dataValues)
+	// console.log('TEST 2 ------->', spot.Bookings[i].dataValues.id)
+
+	for(let i = 0; i < spot.Bookings.length; i++) {
+		let currStart = spot.Bookings[i].dataValues.startDate.toISOString().substring(0, 10);
+		let currEnd = spot.Bookings[i].dataValues.endDate.toISOString().substring(0, 10);
+
+		if(currStart === startDate && spot.Bookings[i].dataValues.id !== req.params.bookingId) {
+			errorResponse.errors['startDate'] = "Start date conflicts with an existing booking"
 		}
 
+		if(currEnd === endDate && spot.Bookings[i].dataValues.id !== req.params.bookingId) {
+			errorResponse.errors['endDate'] = "End date conflicts with an existing booking"
+		}
+	}
+
+	try {
 		if(startDate) {
 			editBooking.startDate = startDate
 		}
@@ -61,23 +90,18 @@ router.put('/:bookingId', async(req, res, next) => {
 		await editBooking.save()
 
 		res.json({
-			message: "Successfully edited your booking!",
-			data: editBooking
+			editBooking
 		})
-	} catch {
-		throw new Error(
+	} catch(err) {
 			next({
-				status: 403,
-				message: "Booking already exists for this time"
+				...errorResponse
 			})
-		)
 	}
 })
 
 //DELETE A BOOKING
 router.delete('/:bookingId', async(req, res, next) => {
 	const deadBooking = await Booking.findOne({where: {id: req.params.bookingId}, include: {model: Spot}});
-	const spot = await deadBooking.getSpot()
 
 	if(!deadBooking) {
 		next({
@@ -86,7 +110,9 @@ router.delete('/:bookingId', async(req, res, next) => {
 		})
 	}
 
-	console.log(spot)
+
+	const spot = await deadBooking.getSpot()
+	
 	if(deadBooking.userId !== req.user.id && spot.ownerId !== req.user.id) {
 		throw new Error(
 			next({

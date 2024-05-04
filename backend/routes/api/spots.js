@@ -336,7 +336,6 @@ router.put('/:spotId', async(req, res, next) => {
 			editSpot.price = price
 		}
 
-
 		await editSpot.save()
 
 		res.json({
@@ -346,8 +345,6 @@ router.put('/:spotId', async(req, res, next) => {
 	} catch(err) {
 		next({
 			status: 400,
-			details: err.errors ? err.errors.map(item => item.message).join(', ') : err.message,
-			message: `${err.message}`,
 		})
 	}
 })
@@ -480,8 +477,21 @@ router.get('/:spotId/bookings', async(req, res, next) => {
 
 //CREATE REVIEW FOR SPOT BASED ON ID
 router.post('/:spotId/reviews', async(req, res, next) => {
-try {
 	let {review, stars} = req.body
+
+	let errorResponse = {
+		"message": "Bad Request",
+		errors: {}
+	}
+
+	if(!review || review === '') {
+		errorResponse.errors['review'] = "Review text is required"
+	}
+	if(!stars || stars < 1 || stars > 5) {
+		errorResponse.errors['stars'] = "Stars must be an integer from 1 to 5"
+	}
+
+try {
 
 	const spot = await Spot.findOne({where: {id: req.params.spotId}, include: {model: Review}})
 
@@ -515,8 +525,7 @@ try {
 } catch(err) {
 	next({
 		status: 400,
-		details: err.errors ? err.errors.map(item => item.message).join(', ') : err.message,
-		message: `${err.message}`,
+		...errorResponse
 	})
 }
 })

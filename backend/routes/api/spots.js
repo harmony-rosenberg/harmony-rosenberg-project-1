@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize,} = require('../../db/models');
 const { Op } = require('sequelize');
-const { requireAuth } = require('../../utils/auth');
+const { requireAuth } = require('../../utils/auth.js');
 
 
 //GET ALL SPOTS
@@ -156,7 +156,7 @@ router.get('/', async (req, res, next) => {
 })
 
 //GET ALL SPOTS FOR CURRENT USER
-router.get('/current', async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
 	const spots = await Spot.findAll({
 		where: {
 			ownerId: req.user.id
@@ -261,7 +261,7 @@ router.get('/:id', async (req, res, next) => {
 })
 
 //CREATE A SPOT
-router.post('/', async (req, res, next) => {
+router.post('/', requireAuth, async (req, res, next) => {
 	const {address, city, state, country, lat, lng, name, description, price} = req.body
 
 	const errorResponse = {
@@ -324,7 +324,7 @@ router.post('/', async (req, res, next) => {
 })
 
 //EDIT A SPOT
-router.put('/:spotId', async(req, res, next) => {
+router.put('/:spotId', requireAuth, async(req, res, next) => {
 	let {address, city, state, country, lat, lng, name, description, price} = req.body
 
 	let errorResponse = {
@@ -395,7 +395,7 @@ router.put('/:spotId', async(req, res, next) => {
 })
 
 //ADD IMAGE TO SPOT BASED ON ID
-router.post('/:spotId/images', async(req, res, next) => {
+router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 	let {url, previewImage} = req.body
 
 	const spot = await Spot.findOne({
@@ -442,7 +442,7 @@ router.post('/:spotId/images', async(req, res, next) => {
 })
 
 //CREATE BOOKING FOR A SPOT
-router.post('/:spotId/bookings', async(req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, async(req, res, next) => {
 	try{
 		let {startDate, endDate} = req.body
 
@@ -482,7 +482,7 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 
 
 //GET ALL BOOKINGS FOR A SPOT
-router.get('/:spotId/bookings', async(req, res, next) => {
+router.get('/:spotId/bookings', requireAuth, async(req, res, next) => {
 	let payLoad = {}
 
 	const spot = await Spot.findOne({
@@ -519,7 +519,7 @@ router.get('/:spotId/bookings', async(req, res, next) => {
 
 
 //CREATE REVIEW FOR SPOT BASED ON ID
-router.post('/:spotId/reviews', async(req, res, next) => {
+router.post('/:spotId/reviews', requireAuth, async(req, res, next) => {
 	let {review, stars} = req.body
 
 	let errorResponse = {
@@ -599,7 +599,7 @@ router.get('/:spotId/reviews', async(req, res, next) => {
 })
 
 //DELETE A SPOT BY ID
-router.delete('/:spotId', async (req, res, next) => {
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
 	try {
 		const deadSpot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
 

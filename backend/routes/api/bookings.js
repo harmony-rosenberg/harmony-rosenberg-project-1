@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage, Booking} = require('../../db/models');
+const { requireAuth } = require('../../utils/auth.js');
 
 //GET ALL OF A USERS CURRENT BOOKINGS
-router.get('/current', async(req, res, next) => {
+router.get('/current', requireAuth, async(req, res, next) => {
 	const userBookings = await Booking.findAll({
 		where: {
 			userId: req.user.id
@@ -27,7 +28,7 @@ router.get('/current', async(req, res, next) => {
 })
 
 //EDIT A BOOKING
-router.put('/:bookingId', async(req, res, next) => {
+router.put('/:bookingId', requireAuth, async(req, res, next) => {
 	let {startDate, endDate} = req.body;
 
 	const editBooking = await Booking.findOne({where: {id: req.params.bookingId}});
@@ -100,7 +101,7 @@ router.put('/:bookingId', async(req, res, next) => {
 })
 
 //DELETE A BOOKING
-router.delete('/:bookingId', async(req, res, next) => {
+router.delete('/:bookingId', requireAuth, async(req, res, next) => {
 	const deadBooking = await Booking.findOne({where: {id: req.params.bookingId}, include: {model: Spot}});
 
 	if(!deadBooking) {
@@ -112,7 +113,7 @@ router.delete('/:bookingId', async(req, res, next) => {
 
 
 	const spot = await deadBooking.getSpot()
-	
+
 	if(deadBooking.userId !== req.user.id && spot.ownerId !== req.user.id) {
 		throw new Error(
 			next({

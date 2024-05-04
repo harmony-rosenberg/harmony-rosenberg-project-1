@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage} = require('../../db/models');
+const { requireAuth } = require('../../utils/auth.js');
 
-router.delete('/:imageId', async(req, res, next) => {
+router.delete('/:imageId', requireAuth, async(req, res, next) => {
 
 	const deadImage = await spotImage.findOne({
 		where: {

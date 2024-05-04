@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage, Booking, Sequelize,} = require('../../db/models');
 const { Op } = require('sequelize');
+const { requireAuth } = require('../../utils/auth.js');
 
 
 //GET ALL SPOTS
@@ -9,7 +10,7 @@ router.get('/', async (req, res, next) => {
 	let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
 
 	if(!page) {page = 1}
-	if(!size) {size = 1}
+	if(!size) {size = 5}
 
 	let pagination = {}
 	pagination.limit = size
@@ -155,7 +156,7 @@ router.get('/', async (req, res, next) => {
 })
 
 //GET ALL SPOTS FOR CURRENT USER
-router.get('/current', async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
 	const spots = await Spot.findAll({
 		where: {
 			ownerId: req.user.id
@@ -164,9 +165,11 @@ router.get('/current', async (req, res, next) => {
 			attributes: ['stars']
 		}, {
 			model: spotImage,
-			attributes: ['url']
 		}]
 	})
+
+
+	console.log(spots.spotImages)
 
 	let avgVal = function(arr) {
 		let totalStars = 0
@@ -175,7 +178,8 @@ router.get('/current', async (req, res, next) => {
 				totalStars += stars
 			}
 			return totalStars/arr.length
-	}
+		}
+
 
 	let spotData = spots.map(spot => {
 		return {
@@ -196,6 +200,7 @@ router.get('/current', async (req, res, next) => {
 			['avg-rating']: avgVal(spot.Reviews),
 		}
 	})
+
 
 	res.json(spotData)
 })
@@ -256,7 +261,7 @@ router.get('/:id', async (req, res, next) => {
 })
 
 //CREATE A SPOT
-router.post('/', async (req, res, next) => {
+router.post('/', requireAuth, async (req, res, next) => {
 	const {address, city, state, country, lat, lng, name, description, price} = req.body
 
 	const errorResponse = {
@@ -275,10 +280,10 @@ router.post('/', async (req, res, next) => {
 	if(!country) {
 		errorResponse.errors['country'] = "Country is required"
 	}
-	if(!lat || lat.match(/[a-z]/i)) {
+	if(!lat || lat.toString().match(/[a-z]/i)) {
 		errorResponse.errors['lat'] = "Latitude is not valid"
 	}
-	if(!lng || lng.match(/[a-z]/i)) {
+	if(!lng || lng.toString().match(/[a-z]/i)) {
 		errorResponse.errors['lng'] = "Longitude is not valid"
 	}
 	if(name.length > 50) {
@@ -319,7 +324,7 @@ router.post('/', async (req, res, next) => {
 })
 
 //EDIT A SPOT
-router.put('/:spotId', async(req, res, next) => {
+router.put('/:spotId', requireAuth, async(req, res, next) => {
 	let {address, city, state, country, lat, lng, name, description, price} = req.body
 
 	let errorResponse = {
@@ -340,10 +345,10 @@ router.put('/:spotId', async(req, res, next) => {
 	if(!country) {
 		errorResponse.errors['country'] = "Country is required"
 	}
-	if(!lat || lat.match(/[a-z]/i)) {
+	if(!lat || lat.toString().match(/[a-z]/i)) {
 		errorResponse.errors['lat'] = "Latitude is not valid"
 	}
-	if(!lng || lng.match(/[a-z]/i)) {
+	if(!lng || lng.toString().match(/[a-z]/i)) {
 		errorResponse.errors['lng'] = "Longitude is not valid"
 	}
 	if(name.length > 50) {
@@ -390,7 +395,7 @@ router.put('/:spotId', async(req, res, next) => {
 })
 
 //ADD IMAGE TO SPOT BASED ON ID
-router.post('/:spotId/images', async(req, res, next) => {
+router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 	let {url, previewImage} = req.body
 
 	const spot = await Spot.findOne({
@@ -437,7 +442,7 @@ router.post('/:spotId/images', async(req, res, next) => {
 })
 
 //CREATE BOOKING FOR A SPOT
-router.post('/:spotId/bookings', async(req, res, next) => {
+router.post('/:spotId/bookings', requireAuth, async(req, res, next) => {
 	try{
 		let {startDate, endDate} = req.body
 
@@ -477,7 +482,7 @@ router.post('/:spotId/bookings', async(req, res, next) => {
 
 
 //GET ALL BOOKINGS FOR A SPOT
-router.get('/:spotId/bookings', async(req, res, next) => {
+router.get('/:spotId/bookings', requireAuth, async(req, res, next) => {
 	let payLoad = {}
 
 	const spot = await Spot.findOne({
@@ -514,7 +519,7 @@ router.get('/:spotId/bookings', async(req, res, next) => {
 
 
 //CREATE REVIEW FOR SPOT BASED ON ID
-router.post('/:spotId/reviews', async(req, res, next) => {
+router.post('/:spotId/reviews', requireAuth, async(req, res, next) => {
 	let {review, stars} = req.body
 
 	let errorResponse = {
@@ -594,7 +599,7 @@ router.get('/:spotId/reviews', async(req, res, next) => {
 })
 
 //DELETE A SPOT BY ID
-router.delete('/:spotId', async (req, res, next) => {
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
 	try {
 		const deadSpot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
 

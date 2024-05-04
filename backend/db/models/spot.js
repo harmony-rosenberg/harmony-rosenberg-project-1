@@ -55,7 +55,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
-        len: [6],
         isNumeric: true,
         max: 90,
         min: -89
@@ -65,7 +64,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
-        len: [6],
         isNumeric: true,
         max: 180,
         min: -179

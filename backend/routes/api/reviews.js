@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { Spot, spotImage, Review, User, reviewImage} = require('../../db/models');
+const { requireAuth } = require('../../utils/auth.js');
 
 //GET REVIEWS FOR CURRENT USER
-router.get('/current', async(req, res, next) => {
+router.get('/current', requireAuth, async(req, res, next) => {
 	const userReviews = await Review.findAll({
 		where: {
 			userId: req.user.id
@@ -28,7 +29,7 @@ router.get('/current', async(req, res, next) => {
 })
 
 //EDIT A REVIEW
-router.put('/:reviewId', async(req, res, next) => {
+router.put('/:reviewId', requireAuth, async(req, res, next) => {
 	let {review, stars} = req.body
 
 	let errorResponse = {
@@ -71,7 +72,7 @@ router.put('/:reviewId', async(req, res, next) => {
 })
 
 //ADD IMAGE TO REVIEW
-router.post('/:reviewId/images', async(req, res, next) => {
+router.post('/:reviewId/images', requireAuth, async(req, res, next) => {
 
 	let {url} = req.body
 
@@ -117,7 +118,7 @@ router.post('/:reviewId/images', async(req, res, next) => {
 
 
 //DELTE A REVIEW
-router.delete('/:reviewId', async(req, res, next) => {
+router.delete('/:reviewId', requireAuth, async(req, res, next) => {
 	const deadReview = await Review.findOne({where: {id: req.params.reviewId, userId: req.user.id}});
 
 	if(!deadReview) {

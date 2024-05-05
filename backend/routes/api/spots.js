@@ -98,15 +98,14 @@ router.get('/', async (req, res, next) => {
 		)
 	}
 
-	try {
+	// try {
 		let spots = await Spot.findAll({
 			where: {
 				...filters
 			},
 		include: [{
 			model: Review,
-			attributes: ['stars']
-			// as: 'rating',
+			// attributes: ['stars']
 			// attributes: [Sequelize.fn('AVG', Sequelize.col('Reviews.stars'), 'rating')]
 		}, {
 			model: spotImage,
@@ -114,7 +113,6 @@ router.get('/', async (req, res, next) => {
 		}],
 		...pagination,
 	})
-
 
 	let avgVal = function(arr) {
 		let totalStars = 0
@@ -125,7 +123,18 @@ router.get('/', async (req, res, next) => {
 			return totalStars/arr.length
 	}
 
-	let spotData = spots.map(spot => {
+	let getImage = function(arr) {
+		for(let i = 0; i < arr.length; i++) {
+			let image = arr[i].dataValues.url
+			if(image) {
+				return image
+			} else {
+				return null
+			}
+		}
+	}
+
+	spotData = spots.map(spot => {
 		return {
 			['id'] : spot.id,
 			['ownerId']: spot.ownerId,
@@ -140,7 +149,7 @@ router.get('/', async (req, res, next) => {
 			['price']: spot.price,
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
-			['previewImage']: spot.spotImages[0].url,
+			['previewImage']: getImage(spot.spotImages),
 			['avg-rating']: avgVal(spot.Reviews),
 			['page']: page,
 			['size']: size
@@ -148,11 +157,11 @@ router.get('/', async (req, res, next) => {
 	})
 
 	res.json(spotData)
-	} catch {
-		next({
-			...queryErrors
-		})
-	}
+	// } catch {
+	// 	next({
+	// 		...queryErrors
+	// 	})
+	// }
 })
 
 //GET ALL SPOTS FOR CURRENT USER
@@ -168,9 +177,6 @@ router.get('/current', requireAuth, async (req, res, next) => {
 		}]
 	})
 
-
-	console.log(spots.spotImages)
-
 	let avgVal = function(arr) {
 		let totalStars = 0
 			for(let j = 0; j < arr.length; j++) {
@@ -180,6 +186,16 @@ router.get('/current', requireAuth, async (req, res, next) => {
 			return totalStars/arr.length
 		}
 
+		let getImage = function(arr) {
+			for(let i = 0; i < arr.length; i++) {
+				let image = arr[i].dataValues.url
+				if(image) {
+					return image
+				} else {
+					return null
+				}
+			}
+		}
 
 	let spotData = spots.map(spot => {
 		return {
@@ -196,11 +212,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
 			['price']: spot.price,
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
-			['previewImage']: spot.spotImages[0].url,
+			['previewImage']: getImage(spot.spotImages),
 			['avg-rating']: avgVal(spot.Reviews),
 		}
 	})
-
 
 	res.json(spotData)
 })
@@ -262,39 +277,63 @@ router.get('/:id', async (req, res, next) => {
 
 //CREATE A SPOT
 router.post('/', requireAuth, async (req, res, next) => {
-	const {address, city, state, country, lat, lng, name, description, price} = req.body
+	let {address, city, state, country, lat, lng, name, description, price} = req.body
 
 	const errorResponse = {
 		"message": "Bad Request",
 		"errors": {}
 	}
+
+	let errorCount = 0
+
 	if(!address) {
 		errorResponse.errors['address'] = "Street address is required"
+		errorCount++
 	}
 	if(!city) {
 		errorResponse.errors['city'] = "City is required"
+		errorCount++
 	}
 	if(!state) {
 		errorResponse.errors['state'] = "State is required"
+		errorCount++
 	}
 	if(!country) {
 		errorResponse.errors['country'] = "Country is required"
+		errorCount++
 	}
-	if(!lat || lat.toString().match(/[a-z]/i)) {
+	if(!lat || lat.toString().match(/[a-z]/i) || lat > 90 || lat < -89) {
 		errorResponse.errors['lat'] = "Latitude is not valid"
+		errorCount++
 	}
-	if(!lng || lng.toString().match(/[a-z]/i)) {
+	if(!lng || lng.toString().match(/[a-z]/i) || lng < -180 || lng > 179) {
 		errorResponse.errors['lng'] = "Longitude is not valid"
+		errorCount++
+	}
+	if(!name) {
+		name = " "
+		errorResponse.errors['name'] = "Name is required"
 	}
 	if(name.length > 50) {
-		console.log(name)
 		errorResponse.errors['name'] = "Name must be less than 50 characters"
+		errorCount++
 	}
 	if(!description) {
 		errorResponse.errors['description'] = "Description is required"
+		errorCount++
 	}
-	if(!price) {
+	if(!price || price < 0) {
 		errorResponse.errors['price'] = "Price per day is required"
+		errorCount++
+	}
+
+	if(errorCount > 0) {
+		throw new Error(
+			next({
+				status: 403,
+				...errorResponse
+			})
+		)
 	}
 
 			try {
@@ -333,35 +372,57 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 		"errors": {}
 	}
 
+	let errorCount = 0
+
 	if(!address) {
 		errorResponse.errors['address'] = "Street address is required"
+		errorCount++
 	}
 	if(!city) {
 		errorResponse.errors['city'] = "City is required"
+		errorCount++
 	}
 	if(!state) {
 		errorResponse.errors['state'] = "State is required"
+		errorCount++
 	}
 	if(!country) {
 		errorResponse.errors['country'] = "Country is required"
+		errorCount++
 	}
 	if(!lat || lat.toString().match(/[a-z]/i)) {
 		errorResponse.errors['lat'] = "Latitude is not valid"
+		errorCount++
 	}
 	if(!lng || lng.toString().match(/[a-z]/i)) {
 		errorResponse.errors['lng'] = "Longitude is not valid"
+		errorCount++
+	}
+	if(!name) {
+		name = " "
+		errorResponse.errors['name'] = "Name is required"
 	}
 	if(name.length > 50) {
-		console.log(name)
 		errorResponse.errors['name'] = "Name must be less than 50 characters"
+		errorCount++
 	}
 	if(!description) {
 		errorResponse.errors['description'] = "Description is required"
+		errorCount++
 	}
 	if(!price) {
 		errorResponse.errors['price'] = "Price per day is required"
+		errorCount++
 	}
 
+	if(errorCount > 0) {
+		throw new Error(
+			next({
+				status: 403,
+				...errorResponse
+			})
+		)
+	}
 	try {
 		const editSpot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
 

@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     url: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 'URL HERE'
     },
     previewImage: {
       type: DataTypes.BOOLEAN,

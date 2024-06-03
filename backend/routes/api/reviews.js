@@ -91,7 +91,6 @@ router.post('/:reviewId/images', requireAuth, async(req, res, next) => {
 			message: "Couldn't find review"
 		})
 	}
-	console.log(currReview.reviewImages)
 
 	if(currReview.reviewImages.length >= 5) {
 		throw new Error(

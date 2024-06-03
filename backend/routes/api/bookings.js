@@ -64,9 +64,6 @@ router.put('/:bookingId', requireAuth, async(req, res, next) => {
 	}
 		const spot = await editBooking.getSpot({include: {model: Booking}})
 
-	// console.log('TEST --------->', editBooking.dataValues)
-	// console.log('TEST 2 ------->', spot.Bookings[i].dataValues.id)
-
 	for(let i = 0; i < spot.Bookings.length; i++) {
 		let currStart = spot.Bookings[i].dataValues.startDate.toISOString().substring(0, 10);
 		let currEnd = spot.Bookings[i].dataValues.endDate.toISOString().substring(0, 10);

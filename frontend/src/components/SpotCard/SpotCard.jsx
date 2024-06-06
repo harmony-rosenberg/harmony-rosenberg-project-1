@@ -4,12 +4,12 @@ const SpotCard = ({ spot }) => {
 	console.log(spot)
 	return (
 		<div className='card'>
-			<div>
 			<img className='splash-img' src={spot.previewImage} />
-			</div>
+			<div className='row-one'>
 			<span>{spot.city}, {spot.state}</span>
-			<span className='rating'>rating</span>
-			<div>
+			<span className='rating'> ⭐ {spot.avgRating || "new"}</span>
+			</div>
+			<div className='row-two'>
 			<span className='spot-price'> {spot.price} </span> <span>night</span>
 			</div>
 		</div>

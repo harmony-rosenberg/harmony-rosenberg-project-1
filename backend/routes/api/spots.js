@@ -150,7 +150,7 @@ router.get('/', async (req, res, next) => {
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
 			['previewImage']: getImage(spot.spotImages),
-			['avg-rating']: avgVal(spot.Reviews),
+			['avgRating']: avgVal(spot.Reviews),
 			['page']: page,
 			['size']: size
 		}
@@ -213,7 +213,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
 			['previewImage']: getImage(spot.spotImages),
-			['avg-rating']: avgVal(spot.Reviews),
+			['avgRating']: avgVal(spot.Reviews),
 		}
 	})
 

@@ -22,12 +22,11 @@ const initialState = {};
 const spotReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case LOAD_SPOTS:
-			// console.log(action.payload)
 			const newState = {}
 			action.payload.forEach(spot => {
 				newState[spot.id] = spot
 			});
-			return newState;
+			return {...initialState, ...newState};
 		default:
 			return state
 	}

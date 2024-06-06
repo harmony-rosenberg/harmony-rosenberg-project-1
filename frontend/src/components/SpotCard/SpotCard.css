@@ -15,6 +15,9 @@
 
 .rating {
 	font-weight: bold;
-	align-self: flex-end;
-	margin-bottom: auto;
+}
+
+.row-one {
+	display: flex;
+	justify-content: space-between;
 }

@@ -1,7 +1,6 @@
 import './SpotCard.css';
 
 const SpotCard = ({ spot }) => {
-	console.log(spot)
 	return (
 		<div className='card'>
 			<img className='splash-img' src={spot.previewImage} />

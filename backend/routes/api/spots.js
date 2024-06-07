@@ -479,7 +479,6 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 
 	// for(let i = 0; i < spot.spotImages.length; i++) {
 	// 	if(!spot.spotImages[i].dataValues.previewImage || spot.spotImages[i].dataValues.previewImage === null) {
-	// 			console.log('TEST -->', spot.spotImages[i].dataValues.previewImage)
 	// 			preview = true
 	// 		} else {
 	// 			preview = false

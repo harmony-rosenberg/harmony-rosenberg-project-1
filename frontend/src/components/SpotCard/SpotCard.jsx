@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import './SpotCard.css';
 
 const SpotCard = ({ spot }) => {
+	const navigate = useNavigate();
 	return (
-		<div className='card'>
+		<div className='card' onClick={() => navigate(`/spots/${spot.id}`)}>
 			<img className='splash-img' src={spot.previewImage} />
 			<div className='row-one'>
 			<span>{spot.city}, {spot.state}</span>

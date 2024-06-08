@@ -3,9 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchSpotDetails } from '../../store/spots';
 import { useEffect, useState } from 'react';
 import SpotImages from '../SpotImages';
-import ReviewFormModal from '../ReviewFormModal'
 import './SpotDetails.css';
-import OpenModalButton from '../OpenModalButton/OpenModalButton';
+import ReviewCard from '../ReviewCard/ReviewCard';
 
 const SpotDetails = () => {
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -20,7 +19,7 @@ const SpotDetails = () => {
 
 	return (
 		isLoaded ? (
-			<div>
+			<main>
 			<h1>{spot.name}</h1>
 			<h2>{spot.city}, {spot.state}, {spot.country}</h2>
 			<div className='spot-images'>
@@ -38,14 +37,8 @@ const SpotDetails = () => {
 				</div>
 				<button className='reserve-btn'>reserve</button>
 			</div>
-			<div className='reviews'>
-				<h2>Reviews</h2>
-				<OpenModalButton
-				buttonText="Post Your Review"
-				modalComponent={<ReviewFormModal />}
-				/>
-			</div>
-		</div>
+			<ReviewCard spot={spot}/>
+		</main>
 		) : (
 			<div>whoopsie daisies</div>
 		)

@@ -1,0 +1,15 @@
+.callout-box {
+	border: 1px black solid;
+	height: 100px;
+	width: 500px;
+}
+
+.callout-details {
+	display: flex;
+	justify-content: space-around;
+}
+
+.reserve-btn {
+	width: 80%;
+	margin-left: 10%;
+}

@@ -28,6 +28,14 @@ const SpotDetails = () => {
 			</div>
 			<h3>Hosted By {spot.owner.firstName} {spot.owner.lastName}</h3>
 			<p>{spot.description}</p>
+			<div className='callout-box'>
+				<div className='callout-details'>
+				<p>{spot.price} night</p>
+				<p>⭐{spot.avgStarRating}</p>
+				<p>{spot.numReviews} reviews</p>
+				</div>
+				<button className='reserve-btn'>reserve</button>
+			</div>
 		</div>
 		) : (
 			<div>whoopsie daisies</div>

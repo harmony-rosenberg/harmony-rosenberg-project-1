@@ -1,8 +1,12 @@
+import './SpotImages.css';
+
 const SpotImages = ({ image }) => {
-	console.log(image)
+
+	const imageClass = image.previewImage ? 'preview-image' : 'image';
+
 	return (
-		<div className='images'>
-			<img src={image.url} />
+		<div className='images-card'>
+			<img className={imageClass} src={image.url} />
 		</div>
 	)
 }

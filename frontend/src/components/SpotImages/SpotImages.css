@@ -1,6 +1,13 @@
-.images {
-	height: 600px;
-	width: 600px;
-	display: flex;
-	
+.preview-image {
+	height: 400px;
+	width: 400px;
+}
+
+.image {
+	height: 200px;
+	width: 200px;
+}
+
+.images-card {
+	display: grid;
 }

@@ -18,36 +18,36 @@ router.get('/', async (req, res, next) => {
 
 	let filters = {}
 
-	if(!maxLat) {
-		maxLat = 90
-	}
-	if(!minLat) {
-		minLat = -90
-	}
-	if(!maxLng) {
-		maxLng = 180
-	}
-	if(!minLng) {
-		minLng = -180
-	}
-	if(!minPrice) {
-		minPrice = 1
-	}
-	if(!maxPrice) {
-		maxPrice = 1000000
-	}
+// 	if(!maxLat) {
+// 		maxLat = 90
+// 	}
+// 	if(!minLat) {
+// 		minLat = -90
+// 	}
+// 	if(!maxLng) {
+// 		maxLng = 180
+// 	}
+// 	if(!minLng) {
+// 		minLng = -180
+// 	}
+// 	if(!minPrice) {
+// 		minPrice = 1
+// 	}
+// 	if(!maxPrice) {
+// 		maxPrice = 1000000
+// 	}
 
-	if(maxLat || minLat) {
-		filters.lat = {[Op.lt]: maxLat, [Op.gt]: minLat}
-}
+// 	if(maxLat || minLat) {
+// 		filters.lat = {[Op.lt]: maxLat, [Op.gt]: minLat}
+// }
 
-	if(maxLng || minLng) {
-		filters.lng = {[Op.lt]: maxLng, [Op.gt]: minLng}
-	}
+// 	if(maxLng || minLng) {
+// 		filters.lng = {[Op.lt]: maxLng, [Op.gt]: minLng}
+// 	}
 
-	if(maxPrice || minPrice) {
-		filters.price = {[Op.lt]: maxPrice, [Op.gt]: minPrice}
-	}
+// 	if(maxPrice || minPrice) {
+// 		filters.price = {[Op.lt]: maxPrice, [Op.gt]: minPrice}
+// 	}
 
 	let queryErrors = {
 		status: 400,
@@ -57,38 +57,38 @@ router.get('/', async (req, res, next) => {
 
 	let errorCount = 0
 
-	if(isNaN(maxLat) || maxLat > 90 || maxLat < -89) {
-		queryErrors.errors['maxLat'] = "Maximum latitude is invalid"
-		errorCount++
-	}
-	if(isNaN(minLat) || minLat < -90 || minLat > 89) {
-		queryErrors.errors['minLat'] = "Minimum latitude is invalid"
-		errorCount++
-	}
-	if(isNaN(maxLng) || maxLng > 180 || maxLng < -179) {
-		queryErrors.errors['maxLng'] = "Maximum longitude is invalid"
-		errorCount++
-	}
-	if(isNaN(minLng) || minLng < -180 || minLng > 179) {
-		queryErrors.errors['minLng'] = "Minimum longitude is invalid"
-		errorCount++
-	}
-	if(isNaN(maxPrice) || maxPrice < 1 || maxPrice > 1000000) {
-		queryErrors.errors['maxPrice'] = "Maximum price is invalid"
-		errorCount++
-	}
-	if(isNaN(minPrice) || minPrice < 1) {
-		queryErrors.errors['minPrice'] = "Minimum price is invalid"
-		errorCount++
-	}
-	if(isNaN(page) || page < 1) {
-		queryErrors.errors['page'] = "Page must be greater than or equal to 1"
-		errorCount++
-	}
-	if(isNaN(size) || size < 1) {
-		queryErrors.errors['size'] = "Size must be greater than or equal to 1"
-		errorCount++
-	}
+	// if(isNaN(maxLat) || maxLat > 90 || maxLat < -89) {
+	// 	queryErrors.errors['maxLat'] = "Maximum latitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(minLat) || minLat < -90 || minLat > 89) {
+	// 	queryErrors.errors['minLat'] = "Minimum latitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(maxLng) || maxLng > 180 || maxLng < -179) {
+	// 	queryErrors.errors['maxLng'] = "Maximum longitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(minLng) || minLng < -180 || minLng > 179) {
+	// 	queryErrors.errors['minLng'] = "Minimum longitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(maxPrice) || maxPrice < 1 || maxPrice > 1000000) {
+	// 	queryErrors.errors['maxPrice'] = "Maximum price is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(minPrice) || minPrice < 1) {
+	// 	queryErrors.errors['minPrice'] = "Minimum price is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(page) || page < 1) {
+	// 	queryErrors.errors['page'] = "Page must be greater than or equal to 1"
+	// 	errorCount++
+	// }
+	// if(isNaN(size) || size < 1) {
+	// 	queryErrors.errors['size'] = "Size must be greater than or equal to 1"
+	// 	errorCount++
+	// }
 
 	if(errorCount > 0) {
 		throw new Error(
@@ -277,7 +277,7 @@ router.get('/:id', async (req, res, next) => {
 
 //CREATE A SPOT
 router.post('/', requireAuth, async (req, res, next) => {
-	let {address, city, state, country, lat, lng, name, description, price} = req.body
+	let {address, city, state, country, name, description, price} = req.body
 
 	const errorResponse = {
 		"message": "Bad Request",
@@ -302,14 +302,14 @@ router.post('/', requireAuth, async (req, res, next) => {
 		errorResponse.errors['country'] = "Country is required"
 		errorCount++
 	}
-	if(!lat || lat.toString().match(/[a-z]/i) || lat > 90 || lat < -89) {
-		errorResponse.errors['lat'] = "Latitude is not valid"
-		errorCount++
-	}
-	if(!lng || lng.toString().match(/[a-z]/i) || lng < -180 || lng > 179) {
-		errorResponse.errors['lng'] = "Longitude is not valid"
-		errorCount++
-	}
+	// if(!lat || lat.toString().match(/[a-z]/i) || lat > 90 || lat < -89) {
+	// 	errorResponse.errors['lat'] = "Latitude is not valid"
+	// 	errorCount++
+	// }
+	// if(!lng || lng.toString().match(/[a-z]/i) || lng < -180 || lng > 179) {
+	// 	errorResponse.errors['lng'] = "Longitude is not valid"
+	// 	errorCount++
+	// }
 	if(!name) {
 		name = " "
 		errorResponse.errors['name'] = "Name is required"
@@ -336,15 +336,15 @@ router.post('/', requireAuth, async (req, res, next) => {
 		)
 	}
 
-			try {
+			// try {
 			const newSpot = await Spot.create({
 			ownerId: req.user.id,
 			address,
 			city,
 			state,
 			country,
-			lat,
-			lng,
+			// lat,
+			// lng,
 			name,
 			description,
 			price
@@ -354,12 +354,12 @@ router.post('/', requireAuth, async (req, res, next) => {
 
 	res.json({newSpot})
 
-	} catch {
-		next({
-			status: 400,
-			...errorResponse
-		})
-	}
+	// } catch {
+	// 	next({
+	// 		status: 400,
+	// 		...errorResponse
+	// 	})
+	// }
 })
 
 //EDIT A SPOT
@@ -390,14 +390,14 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 		errorResponse.errors['country'] = "Country is required"
 		errorCount++
 	}
-	if(!lat || lat.toString().match(/[a-z]/i)) {
-		errorResponse.errors['lat'] = "Latitude is not valid"
-		errorCount++
-	}
-	if(!lng || lng.toString().match(/[a-z]/i)) {
-		errorResponse.errors['lng'] = "Longitude is not valid"
-		errorCount++
-	}
+	// if(!lat || lat.toString().match(/[a-z]/i)) {
+	// 	errorResponse.errors['lat'] = "Latitude is not valid"
+	// 	errorCount++
+	// }
+	// if(!lng || lng.toString().match(/[a-z]/i)) {
+	// 	errorResponse.errors['lng'] = "Longitude is not valid"
+	// 	errorCount++
+	// }
 	if(!name) {
 		name = " "
 		errorResponse.errors['name'] = "Name is required"
@@ -437,8 +437,8 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 			editSpot.city = city
 			editSpot.state = state
 			editSpot.country = country
-			editSpot.lat = lat
-			editSpot.lng = lng
+			// editSpot.lat = lat
+			// editSpot.lng = lng
 			editSpot.name = name
 			editSpot.description = description
 			editSpot.price = price

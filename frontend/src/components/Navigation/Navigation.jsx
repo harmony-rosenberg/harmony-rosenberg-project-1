@@ -12,7 +12,9 @@ function Navigation({ isLoaded }) {
         <Link to='/'>
           <img src="../public/Logo.png" alt="Logo" />
         </Link>
-        {/* <NavLink to="/">Home</NavLink> */}
+      </li>
+      <li>
+        <NavLink to='./spots/new'>Create New Spot</NavLink>
       </li>
       {isLoaded && (
         <li>

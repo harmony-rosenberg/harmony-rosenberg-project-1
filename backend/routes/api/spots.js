@@ -635,7 +635,7 @@ try {
 
 //GET REVIEWS BASED ON SPOT ID
 router.get('/:spotId/reviews', async(req, res, next) => {
-	const spot = await Spot.findOne({where: {id: req.params.spotId}})
+		const spot = await Spot.findOne({where: {id: req.params.spotId}})
 
 	if(!spot) {
 		next({
@@ -652,7 +652,8 @@ router.get('/:spotId/reviews', async(req, res, next) => {
 		{
 			model: reviewImage,
 			attributes: ['id', 'url']
-		}]
+		}],
+		order: [['id']],
 	})
 
 	res.json(spotReviews)

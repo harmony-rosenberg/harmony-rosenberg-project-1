@@ -1,9 +1,12 @@
 const ReviewDetails = ({reviews}) => {
-	console.log('REVIEWS', reviews)
 	return (
 		<main>
 			{Object.values(reviews).map(review => (
-				<div>{review.review}</div>
+				<div key={review.id}>
+					<h1>{review.User.firstName}</h1>
+					<h2>{review.createdAt}</h2>
+					<p>{review.review}</p>
+				</div>
 			))}
 		</main>
 	)

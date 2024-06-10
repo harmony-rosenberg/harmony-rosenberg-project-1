@@ -1,3 +1,4 @@
+import StarRating from '../StarRating/StarRating';
 import './ReviewForm.css';
 
 const ReviewFormModal = () => {
@@ -14,7 +15,9 @@ const ReviewFormModal = () => {
 				/>
 			</label>
 			<label>
-				<div>Stars</div>
+				<div>
+					<StarRating />
+				</div>
 			</label>
 			<button className='submit-btn' type='submit'>Submit Your Review</button>
 		</form>

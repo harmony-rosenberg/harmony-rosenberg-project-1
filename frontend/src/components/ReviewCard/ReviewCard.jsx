@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import './ReviewCard.css';
 import ReviewFormModal from '../ReviewFormModal'
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
@@ -15,6 +15,22 @@ const ReviewCard = ({spot}) => {
 	const {spotId} = useParams();
 	const dispatch = useDispatch();
 	const reviews = useSelector(state => state.reviews);
+  const sessionUser = useSelector(state => state.session.user);
+	console.log('SPOT', spot)
+	console.log('REVIEWS', reviews)
+	console.log('USER', sessionUser)
+
+	let reviewClass
+
+	if(sessionUser) {
+		sessionUser.id === spot.ownerId ? reviewClass = "hidden" : reviewClass = "review-modal"
+	}
+
+	Object.values(reviews).forEach(review => {
+		if(sessionUser && review.userId === sessionUser.id) {
+			reviewClass = "hidden"
+		}
+	})
 
 	useEffect(() => {
 		dispatch(fetchReviews(spotId))
@@ -23,10 +39,13 @@ const ReviewCard = ({spot}) => {
 	return (
 		<main>
 			<h2>⭐{spot.avgStarRating || "New"} {displayNothing} {noReviews}</h2>
-			<OpenModalButton
-				buttonText="Post Your Review"
-				modalComponent={<ReviewFormModal />}
-			/>
+				<div className={reviewClass}>
+					<OpenModalButton
+						buttonText="Post Your Review"
+						modalComponent={<ReviewFormModal />}
+					/>
+				</div>
+
 			<ReviewDetails reviews={reviews}/>
 		</main>
 	)

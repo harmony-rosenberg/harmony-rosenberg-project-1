@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchSpotDetails } from '../../store/spots';
 import { useEffect, useState } from 'react';
 import SpotImages from '../SpotImages';
-import './SpotDetails.css';
 import ReviewCard from '../ReviewCard/ReviewCard';
+import CalloutBox from '../CalloutBox/CalloutBox';
+import './SpotDetails.css';
 
 const SpotDetails = () => {
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -29,14 +30,7 @@ const SpotDetails = () => {
 			</div>
 			<h3>Hosted By {spot.owner.firstName} {spot.owner.lastName}</h3>
 			<p>{spot.description}</p>
-			<div className='callout-box'>
-				<div className='callout-details'>
-				<p>{spot.price} night</p>
-				<p>⭐{spot.avgStarRating}</p>
-				<p>{spot.numReviews} reviews</p>
-				</div>
-				<button className='reserve-btn'>reserve</button>
-			</div>
+			<CalloutBox spot={spot}/>
 			<ReviewCard spot={spot}/>
 		</main>
 		) : (

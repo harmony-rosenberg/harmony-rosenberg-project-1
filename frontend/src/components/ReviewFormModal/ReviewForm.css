@@ -1,0 +1,12 @@
+.review-form {
+	margin: 25px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+}
+
+.submit-btn {
+	width: 90%;
+	height: 3rem;
+}

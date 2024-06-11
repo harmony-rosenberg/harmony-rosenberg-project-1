@@ -23,7 +23,7 @@ const ReviewFormModal = ({ spotId }) => {
 			stars
 		}
 		const newReview = await dispatch(fetchNewReview(spotId, payload))
-		closeModal()
+		.then(closeModal())
 
 		return console.log(newReview)
 	}
@@ -49,7 +49,7 @@ const ReviewFormModal = ({ spotId }) => {
 					index += 1;
 					return (
 						<button
-						type="number"
+						type="button"
 						value={stars}
 						key={index}
 						className={index <= (hover || stars) ? "on" : "off"}

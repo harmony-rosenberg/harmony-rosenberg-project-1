@@ -1,9 +1,7 @@
-// import StarRating from '../StarRating/StarRating';
 import {FaStar} from "react-icons/fa";
 import { useState } from 'react';
 import './ReviewForm.css';
 import { useDispatch } from 'react-redux';
-// import { useParams } from 'react-router-dom';
 import { fetchNewReview } from '../../store/reviews';
 import { useModal } from '../../context/Modal';
 

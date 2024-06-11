@@ -1,17 +1,31 @@
-import {FaStar} from "react-icons/fa";
+// import {FaStar, FaStarHalf} from "react-icons/fa";
+// import { useState } from "react";
+// import "./StarRating.css";
 
-const StarRating = () => {
-	return (
-		<div>
-			{[...Array(5)].map(star => {
-				return <label>
-					<input type="radio" name="rating" />
-					<FaStar />
-				</label>
-			})}
+// const StarRating = () => {
 
-		</div>
-	)
-}
+// 	const [rating, setRating] = useState(0);
+// 	const [hover, setHover] = useState(0);
 
-export default StarRating
+// 		return (
+// 			<div className="star-rating">
+// 				{[...Array(5)].map((star, index) => {
+// 					index += 1;
+// 					return (
+// 						<button
+// 							type="button"
+// 							key={index}
+// 							className={index <= (hover || rating) ? "on" : "off"}
+// 							onClick={() => setRating(index)}
+// 							onMouseEnter={() => setHover(index)}
+// 							onMouseLeave={() => setHover(rating)}
+// 						>
+// 							<span className="star fs-2"><FaStar size={25}/></span>
+// 						</button>
+// 					);
+// 				})}
+// 			</div>
+// 		);
+// 	};
+
+// 	export default StarRating;

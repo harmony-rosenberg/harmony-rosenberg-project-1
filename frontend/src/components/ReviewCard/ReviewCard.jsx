@@ -16,9 +16,9 @@ const ReviewCard = ({spot}) => {
 	const dispatch = useDispatch();
 	const reviews = useSelector(state => state.reviews);
   const sessionUser = useSelector(state => state.session.user);
-	console.log('SPOT', spot)
-	console.log('REVIEWS', reviews)
-	console.log('USER', sessionUser)
+	// console.log('SPOT', spotId)
+	// console.log('REVIEWS', reviews)
+	// console.log('USER', sessionUser)
 
 	let reviewClass
 
@@ -42,7 +42,7 @@ const ReviewCard = ({spot}) => {
 				<div className={reviewClass}>
 					<OpenModalButton
 						buttonText="Post Your Review"
-						modalComponent={<ReviewFormModal />}
+						modalComponent={<ReviewFormModal spotId={spotId} />}
 					/>
 				</div>
 

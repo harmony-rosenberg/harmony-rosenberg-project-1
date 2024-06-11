@@ -32,7 +32,6 @@ const NewSpotForm = () => {
 		}
 
 		const newSpot = await dispatch(fetchNewSpot(payload))
-		// (console.log(newSpot.id))
 
 		if(!user) return <h1>You must be logged in to do this</h1>
 

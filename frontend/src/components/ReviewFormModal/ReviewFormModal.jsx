@@ -4,12 +4,14 @@ import './ReviewForm.css';
 import { useDispatch } from 'react-redux';
 import { fetchNewReview } from '../../store/reviews';
 import { useModal } from '../../context/Modal';
+import { useNavigate } from 'react-router-dom';
 
 // console.log('SPOTID', spotId)
 
 const ReviewFormModal = ({ spotId }) => {
 	const { closeModal } = useModal();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [review, setReview] = useState("")
 	const [stars, setStars] = useState(0);
@@ -25,7 +27,7 @@ const ReviewFormModal = ({ spotId }) => {
 		const newReview = await dispatch(fetchNewReview(spotId, payload))
 		.then(closeModal())
 
-		return console.log(newReview)
+		return navigate(`/spots/${spotId}`)
 	}
 
 	return (

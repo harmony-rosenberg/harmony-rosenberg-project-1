@@ -3,6 +3,12 @@ import { csrfFetch } from "./csrf";
 const LOAD_SPOTS = 'spots/loadSpots';
 const LOAD_DETAILS = 'spots/loadSpotDetails';
 const CREATE_SPOT = 'spots/createSpot';
+const LOAD_USERSPOTS = 'spots/loadCurrentSpots'
+
+const loadUserSpots = (payload) => ({
+	type: LOAD_USERSPOTS,
+	payload
+})
 
 const loadSpots = (payload) => ({
 	type: LOAD_SPOTS,
@@ -25,6 +31,15 @@ export const fetchSpots = () => async (dispatch) => {
 	if(res.ok) {
 		const data = await res.json();
 		dispatch(loadSpots(data))
+	}
+}
+
+export const fetchUserSpots = () => async (dispatch) => {
+	const res = await csrfFetch("/api/spots/current");
+
+	if(res.ok) {
+		const data = await res.json()
+		dispatch(loadUserSpots(data))
 	}
 }
 
@@ -62,7 +77,7 @@ const spotReducer = (state = initialState, action) => {
 			action.payload.forEach(spot => {
 				newState[spot.id] = spot
 			});
-			return {...initialState, ...newState};
+			return {...state, ...newState};
 		}
 			case LOAD_DETAILS: {
 				return {...action.payload}
@@ -71,6 +86,13 @@ const spotReducer = (state = initialState, action) => {
 				const newState = {}
 				newState[action.payload.newSpot.id] = action.payload.newSpot
 				return {...state, ...newState}
+			}
+			case LOAD_USERSPOTS : {
+				const newState = {}
+				action.payload.forEach(spot => {
+					newState[spot.id] = spot
+				})
+				return {...newState}
 			}
 		default:
 			return state

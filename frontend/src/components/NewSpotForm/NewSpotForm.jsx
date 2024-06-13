@@ -15,7 +15,7 @@ const NewSpotForm = () => {
 	const [description, setDescription] = useState("");
 	const [name, setName] = useState("");
 	const [price, setPrice] = useState("");
-	const [previewImage, setPreviewImage] = useState(false);
+	// const [previewImage, setPreviewImage] = useState(false);
 	const [url, seturl] = useState("");
 
 	const handleSubmit = async (e) => {

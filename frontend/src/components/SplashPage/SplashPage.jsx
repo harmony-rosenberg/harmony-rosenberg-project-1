@@ -10,7 +10,7 @@ const SplashPage = () => {
 
 	useEffect(() => {
 		dispatch(fetchSpots())
-	}, [])
+	}, [dispatch])
 
 	return (
 		<div key={spots.id} className='spots-list'>

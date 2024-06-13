@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect,useState } from 'react';
+import { useEffect } from 'react';
 import './ReviewCard.css';
 import ReviewFormModal from '../ReviewFormModal'
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
@@ -16,9 +16,6 @@ const ReviewCard = ({spot}) => {
 	const dispatch = useDispatch();
 	const reviews = useSelector(state => state.reviews);
   const sessionUser = useSelector(state => state.session.user);
-	// console.log('SPOT', spotId)
-	// console.log('REVIEWS', reviews)
-	// console.log('USER', sessionUser)
 
 	let reviewClass
 

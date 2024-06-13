@@ -7,11 +7,10 @@ import UserSpots from '../UserSpots/UserSpots';
 const ManageSpots = () => {
 	const dispatch = useDispatch();
 	const spots = useSelector(state => state.spots);
-	const sessionUser = useSelector(state => state.session.user);
 
 	useEffect(() => {
 		dispatch(fetchUserSpots())
-	}, [])
+	}, [dispatch])
 
 	console.log(spots)
 

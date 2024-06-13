@@ -6,12 +6,11 @@ import { fetchNewReview } from '../../store/reviews';
 import { useModal } from '../../context/Modal';
 import { useNavigate } from 'react-router-dom';
 
-// console.log('SPOTID', spotId)
 
 const ReviewFormModal = ({ spotId }) => {
 	const { closeModal } = useModal();
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 
 	const [review, setReview] = useState("")
 	const [stars, setStars] = useState(0);
@@ -24,10 +23,10 @@ const ReviewFormModal = ({ spotId }) => {
 			review,
 			stars
 		}
-		const newReview = await dispatch(fetchNewReview(spotId, payload))
+		await dispatch(fetchNewReview(spotId, payload))
 		.then(closeModal())
 
-		return navigate(`/spots/${spotId}`)
+		// return navigate(`/spots/${spotId}`)
 	}
 
 	return (

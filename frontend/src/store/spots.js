@@ -6,6 +6,7 @@ const CREATE_SPOT = 'spots/createSpot';
 const LOAD_USERSPOTS = 'spots/loadCurrentSpots';
 const UPDATE_SPOT = 'spots/updateSpot';
 const DELETE_SPOT = 'spots/deleteSpot'
+const CREATE_IMAGE = 'spots/images/createImage'
 
 const deleteSpot = (payload) => ({
 	type: DELETE_SPOT,
@@ -34,6 +35,11 @@ const createSpot = (payload) => ({
 
 const updateSpot = (payload) => ({
 	type: UPDATE_SPOT,
+	payload
+})
+
+const createSpotImage = (payload) => ({
+	type: CREATE_IMAGE,
 	payload
 })
 
@@ -80,6 +86,24 @@ export const fetchNewSpot = (spot) => async (dispatch) => {
 	}
 }
 
+export const createImage = (spotId, imageUrl, isPreview) => async (dispatch) => {
+	console.log('ANYTHING WORKING', spotId, imageUrl, isPreview)
+	const options = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(spotId, imageUrl, isPreview),
+	}
+
+    const res = await csrfFetch(`/api/spots/${spotId}/images`, options);
+    if (response.ok) {
+			const data = await res.json();
+			dispatch(createSpotImage(data))
+			return data
+  }
+};
+
 export const fetchUpdateSpot = (spot) => async (dispatch) => {
 	const res = await csrfFetch(`/api/spots/${spot.id}`, {
 		method: 'PUT',
@@ -125,6 +149,11 @@ const spotReducer = (state = initialState, action) => {
 			case CREATE_SPOT : {
 				const newState = {}
 				newState[action.payload.newSpot.id] = action.payload.newSpot
+				return {...state, ...newState}
+			}
+			case CREATE_IMAGE : {
+				const newState = []
+				newState = action.payload
 				return {...state, ...newState}
 			}
 			case UPDATE_SPOT : {

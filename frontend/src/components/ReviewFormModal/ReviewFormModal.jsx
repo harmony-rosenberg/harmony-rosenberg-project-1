@@ -15,16 +15,35 @@ const ReviewFormModal = ({ spotId }) => {
 	const [review, setReview] = useState("")
 	const [stars, setStars] = useState(0);
 	const [hover, setHover] = useState(0);
+	const [errors, setErrors] = useState([]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
-		const payload = {
-			review,
-			stars
+		const validationErrors = [];
+
+		if (review.length < 10) {
+      validationErrors.push('Review must be at least 10 characters');
+    }
+
+    if (stars === 0) {
+      validationErrors.push('Rating must be at least 1 star');
+    }
+
+    setErrors(validationErrors);
+
+		if(validationErrors.length === 0) {
+			try {
+				const payload = {
+					review,
+					stars
+				}
+				await dispatch(fetchNewReview(spotId, payload))
+				.then(closeModal())
+			} catch (error) {
+				setErrors([error.message])
+			}
 		}
-		await dispatch(fetchNewReview(spotId, payload))
-		.then(closeModal())
 
 		// return navigate(`/spots/${spotId}`)
 	}
@@ -66,7 +85,10 @@ const ReviewFormModal = ({ spotId }) => {
 				</div>
 			</label>
 			<label>
-			<button className='submit-btn' type='submit'>Submit Your Review</button>
+			<button className='submit-btn'
+			type='submit'
+			disabled={review.length < 10 || stars === 0}
+			>Submit Your Review</button>
 			</label>
 		</form>
 		</main>

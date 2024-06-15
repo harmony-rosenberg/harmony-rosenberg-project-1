@@ -19,6 +19,15 @@ function SignupFormModal() {
     e.preventDefault();
     if (password === confirmPassword) {
       setErrors({});
+
+    if(!email.includes('@')) {
+      setErrors({})
+    }
+
+    // if() {
+      // setErrors({})
+    // }
+
       return dispatch(
         sessionActions.signup({
           email,
@@ -37,7 +46,9 @@ function SignupFormModal() {
         });
     }
     return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
+      confirmPassword: "Confirm Password field must be the same as the Password field",
+      email: "Email is invalid",
+      username: "Username must be unique"
     });
   };
 
@@ -107,7 +118,10 @@ function SignupFormModal() {
         {errors.confirmPassword && (
           <p>{errors.confirmPassword}</p>
         )}
-        <button className='btn-signup' type="submit">Sign Up</button>
+        <button className='btn-signup'
+         type="submit"
+         disabled={!email || !username || !firstName || !lastName || !password || username.length < 4 || password.length < 6}
+         >Sign Up</button>
       </form>
     </div>
   );

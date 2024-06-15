@@ -13,7 +13,7 @@ const ReviewDetails = ({reviews}) => {
 					<h1>{review.User.firstName}</h1>
 					<h2>{review.createdAt}</h2>
 					<p>{review.review}</p>
-					<div className={sessionUser.id === review.userId ? 'container' : 'hidden'}>
+					<div className={sessionUser && sessionUser.id === review.userId ? 'container' : 'hidden'}>
 					<OpenModalButton
 					buttonText="Delete your review"
 					modalComponent={<DeleteReview review={review} />} />

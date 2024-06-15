@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import {fetchNewSpot} from '../../store/spots'
+import {fetchNewSpot, createImage} from '../../store/spots'
 import "./NewSpotForm.css";
 
 const NewSpotForm = () => {
@@ -15,8 +15,13 @@ const NewSpotForm = () => {
 	const [description, setDescription] = useState("");
 	const [name, setName] = useState("");
 	const [price, setPrice] = useState("");
-	// const [previewImage, setPreviewImage] = useState(false);
-	const [url, seturl] = useState("");
+	const [preview, setPreview] = useState("");
+	const [urlOne, setUrlOne] = useState("");
+	const [urlTwo, setUrlTwo] = useState("");
+	const [urlThree, setUrlThree] = useState("");
+	const [urlFour, setUrlFour] = useState("");
+
+  const spotImages = []
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -28,11 +33,20 @@ const NewSpotForm = () => {
 			description,
 			name,
 			price,
-			url
+			preview,
+			urlOne,
+			urlTwo,
+			urlThree,
+			urlFour
 		}
 
 		const newSpot = await dispatch(fetchNewSpot(payload))
-		console.log('NEWSPOT', newSpot.newSpot.id)
+		// console.log('HEEERREEE', newSpot.newSpot.id)
+		dispatch(createImage(newSpot.newSpot.id, preview, true))
+		// dispatch(createImage(urlOne))
+		// dispatch(createImage(urlTwo))
+		// dispatch(createImage(urlThree))
+		// dispatch(createImage(urlFour))
 
 		if(!user) return <h1>You must be logged in to do this</h1>
 
@@ -114,44 +128,39 @@ const NewSpotForm = () => {
 				<input
 				placeholder="Preview image URL"
 				type="text"
-				value={url}
-				onChange={(e) => seturl(e.target.value)}
-				// value={previewImage}
-				// onChange={(e) => setPreviewImage(e.target.value)}
+				value={preview}
+				onChange={(e) => setPreview(e.target.value)}
 				/>
 				</label>
-			<label>
-				<input
-				placeholder="Image URL"
-				type="text"
-				value={url}
-				onChange={(e) => seturl(e.target.value)}
-				/>
-			</label>
-			<label>
-				<input
-				placeholder="Image URL"
-				type="text"
-				value={url}
-				onChange={(e) => seturl(e.target.value)}
-				/>
-			</label>
-			<label>
-			<input
-				placeholder="Image URL"
-				type="text"
-				value={url}
-				onChange={(e) => seturl(e.target.value)}
-				/>
-			</label>
-			<label>
-				<input
-				placeholder="Image URL"
-				type="text"
-				value={url}
-				onChange={(e) => seturl(e.target.value)}
-				/>
-			</label>
+				<div>
+					<div className="images-input">
+						<input
+							type="text"
+							placeholder="Image Url"
+							value={urlOne}
+							onChange={(e) => setUrlOne(e.target.value)}
+						/>
+						<input
+							type="text"
+							placeholder="Image Url"
+							value={urlTwo}
+							onChange={(e) => setUrlTwo(e.target.value)}
+						/>
+										<input
+							type="text"
+							placeholder="Image Url"
+							value={urlThree}
+							onChange={(e) => setUrlThree(e.target.value)}
+						/>
+										<input
+							type="text"
+							placeholder="Image Url"
+							value={urlFour}
+							onChange={(e) => setUrlFour(e.target.value)}
+						/>
+					</div>
+
+				</div>
 			<button className="create-btn" type="submit">Create Spot</button>
 		</form>
 		</main>

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserSpots } from '../../store/spots';
+import { NavLink, Link } from 'react-router-dom';
 import './ManageSpots.css';
 import UserSpots from '../UserSpots/UserSpots';
 
@@ -12,11 +13,23 @@ const ManageSpots = () => {
 		dispatch(fetchUserSpots())
 	}, [dispatch])
 
+console.log('SPOTS', spots)
+
+	if(Object.values(spots).length === 0) {
+		return (
+			<div>
+				<h1>Manage Your Spotsss</h1>
+				<Link to='/spots/new'>Create New Spot</Link>
+			</div>
+		)
+	} else {
+
+	}
 
 	return (
 		<main>
 			<h1>Manage Your Spots</h1>
-			<div key={spots.id} className='user-spots-list'>
+			<div className='user-spots-list'>
 			{Object.values(spots).map(spot => {
 				return (
 					<UserSpots key={spot.id} spot={spot}/>

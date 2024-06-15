@@ -86,14 +86,14 @@ export const fetchNewSpot = (spot) => async (dispatch) => {
 	}
 }
 
-export const createImage = (spotId, imageUrl, isPreview) => async (dispatch) => {
-	console.log('ANYTHING WORKING', spotId, imageUrl, isPreview)
+export const createImage = (payLoad, spotId) => async (dispatch) => {
+	// console.log('ANYTHING WORKING', spotId, imageUrl, isPreview)
 	const options = {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(spotId, imageUrl, isPreview),
+		body: JSON.stringify(payLoad),
 	}
 
     const res = await csrfFetch(`/api/spots/${spotId}/images`, options);

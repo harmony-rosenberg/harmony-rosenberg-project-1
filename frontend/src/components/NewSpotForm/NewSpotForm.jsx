@@ -21,7 +21,6 @@ const NewSpotForm = () => {
 	const [urlThree, setUrlThree] = useState("");
 	const [urlFour, setUrlFour] = useState("");
 
-  const spotImages = []
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -42,7 +41,7 @@ const NewSpotForm = () => {
 
 		const newSpot = await dispatch(fetchNewSpot(payload))
 		// console.log('HEEERREEE', newSpot.newSpot.id)
-		dispatch(createImage(newSpot.newSpot.id, preview, true))
+		dispatch(createImage(payload, newSpot.newSpot.id))
 		// dispatch(createImage(urlOne))
 		// dispatch(createImage(urlTwo))
 		// dispatch(createImage(urlThree))

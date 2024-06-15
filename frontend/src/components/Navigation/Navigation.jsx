@@ -10,7 +10,7 @@ function Navigation({ isLoaded }) {
     <ul style={{listStyle: 'none'}} className='nav-bar'>
       <li>
         <Link to='/'>
-          <img src="../public/Logo.png" alt="Logo" />
+          <img src="../Logo.png" alt="Logo" />
         </Link>
       </li>
       <li>

@@ -423,7 +423,7 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 			})
 		)
 	}
-	try {
+	// try {
 		const editSpot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
 
 		if(!editSpot) {
@@ -448,11 +448,11 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 		res.json({
 			editSpot
 		})
-	} catch(err) {
-		next({
-			...errorResponse
-		})
-	}
+	// } catch(err) {
+		// next({
+			// ...errorResponse
+		// })
+	// }
 })
 
 //ADD IMAGE TO SPOT BASED ON ID

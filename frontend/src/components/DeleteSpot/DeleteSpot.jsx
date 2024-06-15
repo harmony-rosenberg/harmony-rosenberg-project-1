@@ -2,7 +2,6 @@ import { fetchDeleteSpot } from "../../store/spots"
 import { useDispatch } from "react-redux";
 import { useModal } from '../../context/Modal';
 
-
 const DeleteSpot = ({spot}) => {
 	const dispatch = useDispatch();
   const { closeModal } = useModal();

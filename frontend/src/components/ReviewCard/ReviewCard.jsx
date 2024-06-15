@@ -42,7 +42,6 @@ const ReviewCard = ({spot}) => {
 						modalComponent={<ReviewFormModal spotId={spotId} />}
 					/>
 				</div>
-
 			<ReviewDetails reviews={reviews}/>
 		</main>
 	)

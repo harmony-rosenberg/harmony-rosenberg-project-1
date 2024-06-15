@@ -1,4 +1,6 @@
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import "./UserSpots.css";
+import DeleteSpot from "../DeleteSpot/DeleteSpot";
 import { useNavigate } from 'react-router-dom';
 
 const UserSpots = ({spot}) => {
@@ -17,14 +19,16 @@ const UserSpots = ({spot}) => {
 			<span>{spot.city}, {spot.state}</span>
 			{/* <span className='rating'> ⭐ {spot.avgRating || "new"}</span> */}
 			</div>
-			<div className='row-two'>
+			<div key={spot.id} className='row-two'>
 			<span className='spot-price'> {spot.price} </span> <span>night</span>
 			</div>
 			<div>
 			</div>
 		</div>
 			<button onClick={update}>Update Spot</button>
-			<button>Delete Spot</button>
+			<OpenModalButton
+			buttonText="Delete your spot"
+			modalComponent={<DeleteSpot spot={spot}/>} />
 		</div>
 	)
 }

@@ -15,7 +15,7 @@ const UpdateSpot = () => {
 	const [description, setDescription] = useState("");
 	const [name, setName] = useState("");
 	const [price, setPrice] = useState("");
-	const [isLoaded, setIsLoaded] = useState(false);
+	// const [isLoaded, setIsLoaded] = useState(false);
 	const {spotId} = useParams();
 
 	const spot = useSelector(state => state.spots)
@@ -32,7 +32,6 @@ const UpdateSpot = () => {
 			name: name || spot.name,
 			price: price || spot.price,
 		}
-		// console.log('UPDATED SPOT', payload)
 
 		const updatedSpot = await dispatch(fetchUpdateSpot(payload))
 
@@ -40,7 +39,7 @@ const UpdateSpot = () => {
 	}
 
 	useEffect(() => {
-		dispatch(fetchSpotDetails(spotId)).then(() => setIsLoaded(true))
+		dispatch(fetchSpotDetails(spotId))
 	}, [spotId, dispatch])
 
 	return (

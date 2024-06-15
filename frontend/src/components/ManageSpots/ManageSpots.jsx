@@ -12,7 +12,6 @@ const ManageSpots = () => {
 		dispatch(fetchUserSpots())
 	}, [dispatch])
 
-	console.log(spots)
 
 	return (
 		<main>

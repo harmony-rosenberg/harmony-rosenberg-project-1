@@ -4,7 +4,9 @@ import './SpotCard.css';
 const SpotCard = ({ spot }) => {
 	const navigate = useNavigate();
 	return (
-		<div className='card' onClick={() => navigate(`/spots/${spot.id}`)}>
+		<div className='spot-card'
+		onClick={() => navigate(`/spots/${spot.id}`)}
+		data-tooltip={`${spot.name}`}>
 			<img className='splash-img' src={spot.previewImage} />
 			<div className='row-one'>
 			<span>{spot.city}, {spot.state}</span>

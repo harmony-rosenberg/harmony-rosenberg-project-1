@@ -97,7 +97,7 @@ export const createImage = (payLoad, spotId) => async (dispatch) => {
 	}
 
     const res = await csrfFetch(`/api/spots/${spotId}/images`, options);
-    if (response.ok) {
+    if (res.ok) {
 			const data = await res.json();
 			dispatch(createSpotImage(data))
 			return data

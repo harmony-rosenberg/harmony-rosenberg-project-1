@@ -452,12 +452,13 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 		// next({
 			// ...errorResponse
 		// })
-	// }
+
 })
 
 //ADD IMAGE TO SPOT BASED ON ID
 router.post('/:spotId/images', requireAuth, async(req, res, next) => {
-	let {url, previewImage} = req.body
+	console.log(req.body)
+	let {preview, urlOne, urlTwo, urlThree, urlFour} = req.body
 
 	const spot = await Spot.findOne({
 		where: {
@@ -475,28 +476,80 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		})
 	}
 
-	// let preview
+	let newImage;
+	let imageOne;
+	let imageTwo;
+	let imageThree;
+	let imageFour
+	// console.log('ID', spot.id)
 
-	// for(let i = 0; i < spot.spotImages.length; i++) {
-	// 	if(!spot.spotImages[i].dataValues.previewImage || spot.spotImages[i].dataValues.previewImage === null) {
-	// 			preview = true
-	// 		} else {
-	// 			preview = false
-	// 		}
-	// 	}
-
-	const image = await spotImage.create({
-		spotId: spot.id,
-		url,
-		previewImage
-	})
-
-
-	const payload = {
-		id: image.id,
-		url: image.url,
-		preview: previewImage
+	if(preview) {
+		newImage = await spotImage.create({
+			spotId: spot.id,
+			url: preview,
+			preview: true
+		})
 	}
+
+	if(urlOne) {
+		imageOne = await spotImage.create({
+			spotId: spot.id,
+			url: urlOne,
+			preview: false
+		})
+	}
+
+	if(urlTwo) {
+		imageTwo = await spotImage.create({
+			spotId: spot.id,
+			url: urlTwo,
+			preview: false
+		})
+	}
+
+	if(urlThree) {
+		imageThree = await spotImage.create({
+			spotId: spot.id,
+			url: urlThree,
+			preview: false
+		})
+	}
+
+	if(urlFour) {
+		imageFour = await spotImage.create({
+			spotId: spot.id,
+			url: urlFour,
+			preview: false
+		})
+	}
+
+		const payload = {
+			previewImage : {
+				id: newImage.spotId,
+				url: newImage.url,
+				preview: newImage.preview
+			},
+			imageOne : {
+				id: imageOne.spotId,
+				url: imageOne.url,
+				preview: imageOne.preview
+			},
+			imageTwo: {
+				id: imageTwo.spotId,
+				url: imageTwo.url,
+				preview: imageTwo.preview
+			},
+			imageThree: {
+				id: imageThree.spotId,
+				url: imageThree.url,
+				preview: imageThree.preview
+			},
+			imageFour: {
+				id: imageFour.spotId,
+				url: imageFour.url,
+				preview: imageFour.preview
+			}
+		}
 
 	res.json(payload)
 })

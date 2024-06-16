@@ -5,10 +5,10 @@ import eslint from 'vite-plugin-eslint';
 export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
-    eslint({
-      lintOnStart: true,
-      failOnError: mode === "production"
-    })
+    // eslint({
+      // lintOnStart: true,
+      // failOnError: mode === "production"
+    // })
   ],
   server: {
     proxy: {

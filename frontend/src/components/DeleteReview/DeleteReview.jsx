@@ -9,13 +9,14 @@ const dispatch = useDispatch();
 const { closeModal } = useModal();
 
 	const handleDelete = async (e) => {
-		// e.preventDefault();
+		e.preventDefault();
 
 		const payload = {
 			...review
 		}
 		const deadReview = await dispatch(fetchDeleteReview(payload))
 		closeModal()
+		return deadReview
 	}
 
 	return (

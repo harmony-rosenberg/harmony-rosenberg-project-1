@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserSpots } from '../../store/spots';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './ManageSpots.css';
 import UserSpots from '../UserSpots/UserSpots';
 
@@ -20,7 +20,7 @@ const ManageSpots = () => {
 				<Link to='/spots/new'>Create New Spot</Link>
 			</div>
 		)
-	} 
+	}
 
 	return (
 		<main>

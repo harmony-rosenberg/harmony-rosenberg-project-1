@@ -19,6 +19,19 @@ function SignupFormModal() {
     e.preventDefault();
     if (password === confirmPassword) {
       setErrors({});
+
+    if(!email.includes('@')) {
+      setErrors({})
+    }
+
+    // if(!firstName.includes(/^[A-Za-z]+$/)) {
+    //   setErrors({})
+    // }
+
+    // if(!lastName.includes(/^[A-Za-z]+$/)) {
+    //   setErrors({})
+    // }
+
       return dispatch(
         sessionActions.signup({
           email,
@@ -37,17 +50,21 @@ function SignupFormModal() {
         });
     }
     return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
+      confirmPassword: "Confirm Password field must be the same as the Password field",
+      email: "Email is invalid",
+      username: "Username must be unique",
+      firstName: "Name must only contain letters",
+      lastName: "Name must only contain letters"
     });
   };
 
   return (
-    <>
+    <div className='form-container'>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
+      <form className='form' onSubmit={handleSubmit}>
         <label>
-          Email
           <input
+            placeholder='Email'
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -56,8 +73,8 @@ function SignupFormModal() {
         </label>
         {errors.email && <p>{errors.email}</p>}
         <label>
-          Username
           <input
+            placeholder='Username'
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -66,8 +83,8 @@ function SignupFormModal() {
         </label>
         {errors.username && <p>{errors.username}</p>}
         <label>
-          First Name
           <input
+            placeholder='First Name'
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
@@ -76,8 +93,8 @@ function SignupFormModal() {
         </label>
         {errors.firstName && <p>{errors.firstName}</p>}
         <label>
-          Last Name
           <input
+            placeholder='Last Name'
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
@@ -86,8 +103,8 @@ function SignupFormModal() {
         </label>
         {errors.lastName && <p>{errors.lastName}</p>}
         <label>
-          Password
           <input
+            placeholder='Password'
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -96,8 +113,8 @@ function SignupFormModal() {
         </label>
         {errors.password && <p>{errors.password}</p>}
         <label>
-          Confirm Password
           <input
+            placeholder='Confirm Password'
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -107,9 +124,12 @@ function SignupFormModal() {
         {errors.confirmPassword && (
           <p>{errors.confirmPassword}</p>
         )}
-        <button type="submit">Sign Up</button>
+        <button className='btn-signup'
+         type="submit"
+         disabled={!email || !username || !firstName || !lastName || !password || username.length < 4 || password.length < 6}
+         >Sign Up</button>
       </form>
-    </>
+    </div>
   );
 }
 

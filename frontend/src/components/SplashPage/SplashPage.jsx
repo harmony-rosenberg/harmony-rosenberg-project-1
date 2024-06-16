@@ -7,11 +7,10 @@ import './SplashPage.css';
 const SplashPage = () => {
 	const dispatch = useDispatch();
 	const spots = useSelector(state => state.spots)
-	// console.log(spots)
 
 	useEffect(() => {
 		dispatch(fetchSpots())
-	}, [])
+	}, [dispatch])
 
 	return (
 		<div className='spots-list'>

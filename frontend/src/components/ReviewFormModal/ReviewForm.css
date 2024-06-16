@@ -1,0 +1,28 @@
+.review-form {
+	margin: 25px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+}
+
+.submit-btn {
+	width: 90%;
+	height: 3rem;
+}
+
+.on {
+  background-color: transparent;
+	border: none;
+  outline: none;
+  cursor: pointer;
+  color: #ffd900;
+}
+
+.off {
+  background-color: transparent;
+	border: none;
+  outline: none;
+  cursor: pointer;
+  color: #ffd90073;
+}

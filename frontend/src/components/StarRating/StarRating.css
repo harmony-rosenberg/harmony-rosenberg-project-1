@@ -1,0 +1,15 @@
+.on {
+  background-color: transparent;
+	border: none;
+  outline: none;
+  cursor: pointer;
+  color: #ffd900;
+}
+
+.off {
+  background-color: transparent;
+	border: none;
+  outline: none;
+  cursor: pointer;
+  color: #ffd90073;
+}

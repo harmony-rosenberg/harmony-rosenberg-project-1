@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { FaUserCircle } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
@@ -9,6 +10,8 @@ import SignupFormModal from '../SignupFormModal/SignupFormModal';
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const [credential, setCredential] = useState("Demo-lition");
+  const [password, setPassword] = useState("password");
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -38,6 +41,12 @@ function ProfileButton({ user }) {
     closeMenu();
   };
 
+  const demoLogin = () => {
+    // setCredential('Demo-lition')
+    // setPassword('password')
+    return dispatch(sessionActions.login({ credential, password }))
+  }
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
@@ -49,8 +58,11 @@ function ProfileButton({ user }) {
         {user ? (
           <>
             <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>Hello, {user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
+            <li>
+              <NavLink to='./spots/current'>Manage Spots</NavLink>
+            </li>
             <li>
               <button onClick={logout}>Log Out</button>
             </li>
@@ -70,6 +82,9 @@ function ProfileButton({ user }) {
                 onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
+            </li>
+            <li>
+              <button onClick={demoLogin}>Log in as Demo User</button>
             </li>
           </>
         )}

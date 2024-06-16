@@ -18,36 +18,36 @@ router.get('/', async (req, res, next) => {
 
 	let filters = {}
 
-	if(!maxLat) {
-		maxLat = 90
-	}
-	if(!minLat) {
-		minLat = -90
-	}
-	if(!maxLng) {
-		maxLng = 180
-	}
-	if(!minLng) {
-		minLng = -180
-	}
-	if(!minPrice) {
-		minPrice = 1
-	}
-	if(!maxPrice) {
-		maxPrice = 1000000
-	}
+// 	if(!maxLat) {
+// 		maxLat = 90
+// 	}
+// 	if(!minLat) {
+// 		minLat = -90
+// 	}
+// 	if(!maxLng) {
+// 		maxLng = 180
+// 	}
+// 	if(!minLng) {
+// 		minLng = -180
+// 	}
+// 	if(!minPrice) {
+// 		minPrice = 1
+// 	}
+// 	if(!maxPrice) {
+// 		maxPrice = 1000000
+// 	}
 
-	if(maxLat || minLat) {
-		filters.lat = {[Op.lt]: maxLat, [Op.gt]: minLat}
-}
+// 	if(maxLat || minLat) {
+// 		filters.lat = {[Op.lt]: maxLat, [Op.gt]: minLat}
+// }
 
-	if(maxLng || minLng) {
-		filters.lng = {[Op.lt]: maxLng, [Op.gt]: minLng}
-	}
+// 	if(maxLng || minLng) {
+// 		filters.lng = {[Op.lt]: maxLng, [Op.gt]: minLng}
+// 	}
 
-	if(maxPrice || minPrice) {
-		filters.price = {[Op.lt]: maxPrice, [Op.gt]: minPrice}
-	}
+// 	if(maxPrice || minPrice) {
+// 		filters.price = {[Op.lt]: maxPrice, [Op.gt]: minPrice}
+// 	}
 
 	let queryErrors = {
 		status: 400,
@@ -57,38 +57,38 @@ router.get('/', async (req, res, next) => {
 
 	let errorCount = 0
 
-	if(isNaN(maxLat) || maxLat > 90 || maxLat < -89) {
-		queryErrors.errors['maxLat'] = "Maximum latitude is invalid"
-		errorCount++
-	}
-	if(isNaN(minLat) || minLat < -90 || minLat > 89) {
-		queryErrors.errors['minLat'] = "Minimum latitude is invalid"
-		errorCount++
-	}
-	if(isNaN(maxLng) || maxLng > 180 || maxLng < -179) {
-		queryErrors.errors['maxLng'] = "Maximum longitude is invalid"
-		errorCount++
-	}
-	if(isNaN(minLng) || minLng < -180 || minLng > 179) {
-		queryErrors.errors['minLng'] = "Minimum longitude is invalid"
-		errorCount++
-	}
-	if(isNaN(maxPrice) || maxPrice < 1 || maxPrice > 1000000) {
-		queryErrors.errors['maxPrice'] = "Maximum price is invalid"
-		errorCount++
-	}
-	if(isNaN(minPrice) || minPrice < 1) {
-		queryErrors.errors['minPrice'] = "Minimum price is invalid"
-		errorCount++
-	}
-	if(isNaN(page) || page < 1) {
-		queryErrors.errors['page'] = "Page must be greater than or equal to 1"
-		errorCount++
-	}
-	if(isNaN(size) || size < 1) {
-		queryErrors.errors['size'] = "Size must be greater than or equal to 1"
-		errorCount++
-	}
+	// if(isNaN(maxLat) || maxLat > 90 || maxLat < -89) {
+	// 	queryErrors.errors['maxLat'] = "Maximum latitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(minLat) || minLat < -90 || minLat > 89) {
+	// 	queryErrors.errors['minLat'] = "Minimum latitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(maxLng) || maxLng > 180 || maxLng < -179) {
+	// 	queryErrors.errors['maxLng'] = "Maximum longitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(minLng) || minLng < -180 || minLng > 179) {
+	// 	queryErrors.errors['minLng'] = "Minimum longitude is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(maxPrice) || maxPrice < 1 || maxPrice > 1000000) {
+	// 	queryErrors.errors['maxPrice'] = "Maximum price is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(minPrice) || minPrice < 1) {
+	// 	queryErrors.errors['minPrice'] = "Minimum price is invalid"
+	// 	errorCount++
+	// }
+	// if(isNaN(page) || page < 1) {
+	// 	queryErrors.errors['page'] = "Page must be greater than or equal to 1"
+	// 	errorCount++
+	// }
+	// if(isNaN(size) || size < 1) {
+	// 	queryErrors.errors['size'] = "Size must be greater than or equal to 1"
+	// 	errorCount++
+	// }
 
 	if(errorCount > 0) {
 		throw new Error(
@@ -150,7 +150,7 @@ router.get('/', async (req, res, next) => {
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
 			['previewImage']: getImage(spot.spotImages),
-			['avg-rating']: avgVal(spot.Reviews),
+			['avgRating']: avgVal(spot.Reviews),
 			['page']: page,
 			['size']: size
 		}
@@ -213,7 +213,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 			['createdAt']: spot.createdAt,
 			['updatedAt']: spot.updatedAt,
 			['previewImage']: getImage(spot.spotImages),
-			['avg-rating']: avgVal(spot.Reviews),
+			['avgRating']: avgVal(spot.Reviews),
 		}
 	})
 
@@ -277,7 +277,7 @@ router.get('/:id', async (req, res, next) => {
 
 //CREATE A SPOT
 router.post('/', requireAuth, async (req, res, next) => {
-	let {address, city, state, country, lat, lng, name, description, price} = req.body
+	let {address, city, state, country, name, description, price} = req.body
 
 	const errorResponse = {
 		"message": "Bad Request",
@@ -302,14 +302,14 @@ router.post('/', requireAuth, async (req, res, next) => {
 		errorResponse.errors['country'] = "Country is required"
 		errorCount++
 	}
-	if(!lat || lat.toString().match(/[a-z]/i) || lat > 90 || lat < -89) {
-		errorResponse.errors['lat'] = "Latitude is not valid"
-		errorCount++
-	}
-	if(!lng || lng.toString().match(/[a-z]/i) || lng < -180 || lng > 179) {
-		errorResponse.errors['lng'] = "Longitude is not valid"
-		errorCount++
-	}
+	// if(!lat || lat.toString().match(/[a-z]/i) || lat > 90 || lat < -89) {
+	// 	errorResponse.errors['lat'] = "Latitude is not valid"
+	// 	errorCount++
+	// }
+	// if(!lng || lng.toString().match(/[a-z]/i) || lng < -180 || lng > 179) {
+	// 	errorResponse.errors['lng'] = "Longitude is not valid"
+	// 	errorCount++
+	// }
 	if(!name) {
 		name = " "
 		errorResponse.errors['name'] = "Name is required"
@@ -336,15 +336,15 @@ router.post('/', requireAuth, async (req, res, next) => {
 		)
 	}
 
-			try {
+			// try {
 			const newSpot = await Spot.create({
 			ownerId: req.user.id,
 			address,
 			city,
 			state,
 			country,
-			lat,
-			lng,
+			// lat,
+			// lng,
 			name,
 			description,
 			price
@@ -354,12 +354,12 @@ router.post('/', requireAuth, async (req, res, next) => {
 
 	res.json({newSpot})
 
-	} catch {
-		next({
-			status: 400,
-			...errorResponse
-		})
-	}
+	// } catch {
+	// 	next({
+	// 		status: 400,
+	// 		...errorResponse
+	// 	})
+	// }
 })
 
 //EDIT A SPOT
@@ -390,14 +390,14 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 		errorResponse.errors['country'] = "Country is required"
 		errorCount++
 	}
-	if(!lat || lat.toString().match(/[a-z]/i)) {
-		errorResponse.errors['lat'] = "Latitude is not valid"
-		errorCount++
-	}
-	if(!lng || lng.toString().match(/[a-z]/i)) {
-		errorResponse.errors['lng'] = "Longitude is not valid"
-		errorCount++
-	}
+	// if(!lat || lat.toString().match(/[a-z]/i)) {
+	// 	errorResponse.errors['lat'] = "Latitude is not valid"
+	// 	errorCount++
+	// }
+	// if(!lng || lng.toString().match(/[a-z]/i)) {
+	// 	errorResponse.errors['lng'] = "Longitude is not valid"
+	// 	errorCount++
+	// }
 	if(!name) {
 		name = " "
 		errorResponse.errors['name'] = "Name is required"
@@ -423,7 +423,7 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 			})
 		)
 	}
-	try {
+	// try {
 		const editSpot = await Spot.findOne({where: {id: req.params.spotId, ownerId: req.user.id}});
 
 		if(!editSpot) {
@@ -437,8 +437,8 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 			editSpot.city = city
 			editSpot.state = state
 			editSpot.country = country
-			editSpot.lat = lat
-			editSpot.lng = lng
+			// editSpot.lat = lat
+			// editSpot.lng = lng
 			editSpot.name = name
 			editSpot.description = description
 			editSpot.price = price
@@ -448,16 +448,17 @@ router.put('/:spotId', requireAuth, async(req, res, next) => {
 		res.json({
 			editSpot
 		})
-	} catch(err) {
-		next({
-			...errorResponse
-		})
-	}
+	// } catch(err) {
+		// next({
+			// ...errorResponse
+		// })
+
 })
 
 //ADD IMAGE TO SPOT BASED ON ID
 router.post('/:spotId/images', requireAuth, async(req, res, next) => {
-	let {url, previewImage} = req.body
+	console.log(req.body)
+	let {preview, urlOne, urlTwo, urlThree, urlFour} = req.body
 
 	const spot = await Spot.findOne({
 		where: {
@@ -475,29 +476,80 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		})
 	}
 
-	// let preview
+	let newImage;
+	let imageOne;
+	let imageTwo;
+	let imageThree;
+	let imageFour
+	// console.log('ID', spot.id)
 
-	// for(let i = 0; i < spot.spotImages.length; i++) {
-	// 	if(!spot.spotImages[i].dataValues.previewImage || spot.spotImages[i].dataValues.previewImage === null) {
-	// 			console.log('TEST -->', spot.spotImages[i].dataValues.previewImage)
-	// 			preview = true
-	// 		} else {
-	// 			preview = false
-	// 		}
-	// 	}
-
-	const image = await spotImage.create({
-		spotId: spot.id,
-		url,
-		previewImage
-	})
-
-
-	const payload = {
-		id: image.id,
-		url: image.url,
-		preview: previewImage
+	if(preview) {
+		newImage = await spotImage.create({
+			spotId: spot.id,
+			url: preview,
+			preview: true
+		})
 	}
+
+	if(urlOne) {
+		imageOne = await spotImage.create({
+			spotId: spot.id,
+			url: urlOne,
+			preview: false
+		})
+	}
+
+	if(urlTwo) {
+		imageTwo = await spotImage.create({
+			spotId: spot.id,
+			url: urlTwo,
+			preview: false
+		})
+	}
+
+	if(urlThree) {
+		imageThree = await spotImage.create({
+			spotId: spot.id,
+			url: urlThree,
+			preview: false
+		})
+	}
+
+	if(urlFour) {
+		imageFour = await spotImage.create({
+			spotId: spot.id,
+			url: urlFour,
+			preview: false
+		})
+	}
+
+		const payload = {
+			previewImage : {
+				id: newImage.spotId,
+				url: newImage.url,
+				preview: newImage.preview
+			},
+			imageOne : {
+				id: imageOne.spotId,
+				url: imageOne.url,
+				preview: imageOne.preview
+			},
+			imageTwo: {
+				id: imageTwo.spotId,
+				url: imageTwo.url,
+				preview: imageTwo.preview
+			},
+			imageThree: {
+				id: imageThree.spotId,
+				url: imageThree.url,
+				preview: imageThree.preview
+			},
+			imageFour: {
+				id: imageFour.spotId,
+				url: imageFour.url,
+				preview: imageFour.preview
+			}
+		}
 
 	res.json(payload)
 })
@@ -636,27 +688,53 @@ try {
 
 //GET REVIEWS BASED ON SPOT ID
 router.get('/:spotId/reviews', async(req, res, next) => {
-	const spot = await Spot.findOne({where: {id: req.params.spotId}})
+	const spotId = req.params.spotId
+	const spot = await Spot.findByPk(spotId);
 
-	if(!spot) {
-		next({
-			status: 404,
-			message: "Spot couldn't be found"
+	if(spot) {
+		const reviews = await Review.findAll({
+			where: { spotId },
+			order: [["createdAt", "DESC"]],
+			include: [
+				{
+					model: User,
+					attributes: ["id", "firstName", "lastName"],
+				},
+				{
+					model: reviewImage,
+					attributes: ["id", "url"],
+					required: false
+				}
+			]
 		})
+		return res.status(200).json({reviews: reviews})
+	} else {
+		return res.status(404).json({ message: "Spot couldnt be found"})
 	}
 
-	const spotReviews = await spot.getReviews({
-		include: [{
-			model: User,
-			attributes: ['id', 'firstName', 'lastName']
-		},
-		{
-			model: reviewImage,
-			attributes: ['id', 'url']
-		}]
-	})
+	// 	const spot = await Spot.findOne({where: {id: req.params.spotId}})
 
-	res.json(spotReviews)
+	// if(!spot) {
+	// 	next({
+	// 		status: 404,
+	// 		message: "Spot couldn't be found"
+	// 	})
+	// }
+
+	// const spotReviews = await spot.getReviews({
+	// 	order: [["createdAt", "DESC"]],
+	// 	include: [{
+	// 		model: User,
+	// 		attributes: ['id', 'firstName', 'lastName']
+	// 	},
+	// 	{
+	// 		model: reviewImage,
+	// 		attributes: ['id', 'url']
+	// 	}],
+	// 	order: [['id']],
+	// })
+
+	// res.json(spotReviews)
 })
 
 //DELETE A SPOT BY ID

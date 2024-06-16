@@ -1,0 +1,13 @@
+.preview-image {
+	height: 400px;
+	width: 400px;
+}
+
+.image {
+	height: 200px;
+	width: 200px;
+}
+
+.images-card {
+	display: grid;
+}

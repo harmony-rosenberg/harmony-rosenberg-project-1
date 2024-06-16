@@ -6,8 +6,33 @@
 	box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
+	margin-top: 25px;
+	margin-bottom: 50px;
+	border-bottom: 1px black solid;
 }
 
-.log-in-btn {
-	color: red;
+.nav-right {
+	display: flex;
+	gap: 15px;
+}
+
+.profile-btn-container {
+	position: relative;
+	left: 10px;
+}
+
+.profile-dropdown {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	gap: 5px;
+	margin-bottom: 5px;
+}
+
+
+.log-out-btn {
+	background-color: red;
+	color: white;
+	border: 1px red solid;
+	border-radius: 25%;
 }

@@ -35,6 +35,7 @@ const UpdateSpot = () => {
 
 		const updatedSpot = await dispatch(fetchUpdateSpot(payload))
 
+		console.log(updatedSpot)
 		return navigate(`/spots/${spot.id}`)
 	}
 

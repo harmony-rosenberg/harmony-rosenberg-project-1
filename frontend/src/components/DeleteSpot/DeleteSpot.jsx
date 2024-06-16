@@ -15,6 +15,7 @@ const DeleteSpot = ({spot}) => {
 
 		const deadSpot = await dispatch(fetchDeleteSpot(payload))
 		closeModal()
+		return deadSpot
 	}
 
 	return (

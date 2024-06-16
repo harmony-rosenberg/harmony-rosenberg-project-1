@@ -10,8 +10,8 @@ import SignupFormModal from '../SignupFormModal/SignupFormModal';
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-  const [credential, setCredential] = useState("Demo-lition");
-  const [password, setPassword] = useState("password");
+  const [credential] = useState("Demo-lition");
+  const [password] = useState("password");
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -42,8 +42,6 @@ function ProfileButton({ user }) {
   };
 
   const demoLogin = () => {
-    // setCredential('Demo-lition')
-    // setPassword('password')
     return dispatch(sessionActions.login({ credential, password }))
   }
 
@@ -51,12 +49,14 @@ function ProfileButton({ user }) {
 
   return (
     <>
+    <div className='profile-btn'>
       <button onClick={toggleMenu}>
         <FaUserCircle />
       </button>
-      <ul className={ulClassName} ref={ulRef}>
+    </div>
+      <ul style={{listStyle: 'none'}} className={ulClassName} ref={ulRef}>
         {user ? (
-          <>
+          <div className='profile-dropdown'>
             <li>{user.username}</li>
             <li>Hello, {user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
@@ -64,9 +64,9 @@ function ProfileButton({ user }) {
               <NavLink to='./spots/current'>Manage Spots</NavLink>
             </li>
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button className="log-out-btn" onClick={logout}>Log Out</button>
             </li>
-          </>
+          </div>
         ) : (
           <>
             <li>

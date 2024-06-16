@@ -4,7 +4,7 @@ import './ReviewForm.css';
 import { useDispatch } from 'react-redux';
 import { fetchNewReview } from '../../store/reviews';
 import { useModal } from '../../context/Modal';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 
 const ReviewFormModal = ({ spotId }) => {
@@ -52,6 +52,7 @@ const ReviewFormModal = ({ spotId }) => {
 		<main>
 		<form onSubmit={handleSubmit} className='review-form'>
 			<h1>How was your stay?</h1>
+			{errors && <p>{errors}</p>}
 			<label>
 				<textarea
 				value={review}

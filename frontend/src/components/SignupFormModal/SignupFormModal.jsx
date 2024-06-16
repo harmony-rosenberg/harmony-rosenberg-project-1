@@ -24,9 +24,13 @@ function SignupFormModal() {
       setErrors({})
     }
 
-    // if() {
-      // setErrors({})
-    // }
+    if(!firstName.includes(/^[A-Za-z]+$/)) {
+      setErrors({})
+    }
+
+    if(!lastName.includes(/^[A-Za-z]+$/)) {
+      setErrors({})
+    }
 
       return dispatch(
         sessionActions.signup({
@@ -48,7 +52,9 @@ function SignupFormModal() {
     return setErrors({
       confirmPassword: "Confirm Password field must be the same as the Password field",
       email: "Email is invalid",
-      username: "Username must be unique"
+      username: "Username must be unique",
+      firstName: "Name must only contain letters",
+      lastName: "Name must only contain letters"
     });
   };
 

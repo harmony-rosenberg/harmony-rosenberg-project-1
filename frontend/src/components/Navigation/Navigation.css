@@ -2,6 +2,9 @@
 	display: none;
 }
 
-.navbar {
-	background-color: green;
+.nav-bar {
+	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
 }
+

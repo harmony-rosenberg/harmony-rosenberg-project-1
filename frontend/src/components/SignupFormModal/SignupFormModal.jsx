@@ -24,13 +24,13 @@ function SignupFormModal() {
       setErrors({})
     }
 
-    if(!firstName.includes(/^[A-Za-z]+$/)) {
-      setErrors({})
-    }
+    // if(!firstName.includes(/^[A-Za-z]+$/)) {
+    //   setErrors({})
+    // }
 
-    if(!lastName.includes(/^[A-Za-z]+$/)) {
-      setErrors({})
-    }
+    // if(!lastName.includes(/^[A-Za-z]+$/)) {
+    //   setErrors({})
+    // }
 
       return dispatch(
         sessionActions.signup({

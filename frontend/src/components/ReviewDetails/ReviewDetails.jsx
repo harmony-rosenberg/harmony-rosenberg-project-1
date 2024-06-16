@@ -5,13 +5,11 @@ import './ReviewDetails.css';
 
 const ReviewDetails = ({review}) => {
   const sessionUser = useSelector(state => state.session.user);
-
 	const dateRaw = new Date(review.createdAt).toDateString()
 
 	const dateFormat = (date) => {
 		const dateArr = date.split(" ")
-
-		let returnDate;
+    let returnDate;
 
 		for(let i = 0; i < dateArr.length; i++) {
 			const day = dateArr[0]
@@ -21,7 +19,6 @@ const ReviewDetails = ({review}) => {
 		}
 		return returnDate.join(" ")
 	}
-
 
 	return (
 		<main>

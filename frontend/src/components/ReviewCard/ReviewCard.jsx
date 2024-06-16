@@ -33,9 +33,16 @@ const ReviewCard = ({spot}) => {
 		dispatch(fetchReviews(spotId))
 	}, [spotId, dispatch])
 
+	let textClassName;
+
+	if(sessionUser) {
+		sessionUser.id !== spot.ownerId && Object.values(reviews).length === 0 ?  textClassName = "post-a-review-text" : textClassName = "hidden"
+	}
+
 	return (
 		<main>
 			<h2>⭐{spot.avgStarRating || "New"} {displayNothing} {noReviews}</h2>
+			<div className={textClassName}>Be the First to post a review!</div>
 				<div className={reviewClass}>
 					<OpenModalButton
 						buttonText="Post Your Review"
@@ -45,9 +52,7 @@ const ReviewCard = ({spot}) => {
 				<div className='reviews-list'>
 					{Object.values(reviews).map((review) => (
 						<ReviewDetails review={review}/>
-
 					))}
-
 				</div>
 		</main>
 	)

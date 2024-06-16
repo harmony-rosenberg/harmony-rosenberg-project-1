@@ -9,14 +9,14 @@ const { requireAuth } = require('../../utils/auth.js');
 router.get('/', async (req, res, next) => {
 	let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
 
-	if(!page) {page = 1}
-	if(!size) {size = 5}
+	// if(!page) {page = 1}
+	// if(!size) {size = 5}
 
-	let pagination = {}
-	pagination.limit = size
-	pagination.offset = size * (page -1)
+	// let pagination = {}
+	// pagination.limit = size
+	// pagination.offset = size * (page -1)
 
-	let filters = {}
+	// let filters = {}
 
 // 	if(!maxLat) {
 // 		maxLat = 90
@@ -101,7 +101,7 @@ router.get('/', async (req, res, next) => {
 	// try {
 		let spots = await Spot.findAll({
 			where: {
-				...filters
+				// ...filters
 			},
 		include: [{
 			model: Review,
@@ -111,7 +111,7 @@ router.get('/', async (req, res, next) => {
 			model: spotImage,
 			attributes: ['url']
 		}],
-		...pagination,
+		// ...pagination,
 	})
 
 	let avgVal = function(arr) {

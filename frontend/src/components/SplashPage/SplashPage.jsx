@@ -15,7 +15,7 @@ const SplashPage = () => {
 	return (
 		<div className='spots-list'>
 			{Object.values(spots).map((spot) => (
-				<SpotCard key={spot.id} spot={spot} />
+				<SpotCard spot={spot} />
 			))}
 		</div>
 	)

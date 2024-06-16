@@ -24,7 +24,16 @@ export const fetchReviews = (spotId) => async (dispatch) => {
 
 	if(res.ok) {
 		const data = await res.json();
-		dispatch(loadReviews(data))
+		if(data.reviews) {
+			const list = data.reviews.map(({id, review, User, createdAt, reviewImages}) => ({
+				id,
+				review,
+				User,
+				createdAt,
+				reviewImages
+			}))
+			dispatch(loadReviews(list))
+		}
 	}
 }
 
@@ -63,10 +72,10 @@ const reviewsReducer = (state = initialState, action) => {
 	switch (action.type) {
 		case LOAD_REVIEWS: {
 			const newState = {}
-			action.payload.forEach(review => {
-				newState[review.id] = review
+			action.payload.forEach((review) => {
+					newState[review.createdAt] = review
 			})
-			return newState
+			return {...newState}
 		}
 		case CREATE_REVIEW: {
 			const newState = {}

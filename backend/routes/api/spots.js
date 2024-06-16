@@ -688,28 +688,53 @@ try {
 
 //GET REVIEWS BASED ON SPOT ID
 router.get('/:spotId/reviews', async(req, res, next) => {
-		const spot = await Spot.findOne({where: {id: req.params.spotId}})
+	const spotId = req.params.spotId
+	const spot = await Spot.findByPk(spotId);
 
-	if(!spot) {
-		next({
-			status: 404,
-			message: "Spot couldn't be found"
+	if(spot) {
+		const reviews = await Review.findAll({
+			where: { spotId },
+			order: [["createdAt", "DESC"]],
+			include: [
+				{
+					model: User,
+					attributes: ["id", "firstName", "lastName"],
+				},
+				{
+					model: reviewImage,
+					attributes: ["id", "url"],
+					required: false
+				}
+			]
 		})
+		return res.status(200).json({reviews: reviews})
+	} else {
+		return res.status(404).json({ message: "Spot couldnt be found"})
 	}
 
-	const spotReviews = await spot.getReviews({
-		include: [{
-			model: User,
-			attributes: ['id', 'firstName', 'lastName']
-		},
-		{
-			model: reviewImage,
-			attributes: ['id', 'url']
-		}],
-		order: [['id']],
-	})
+	// 	const spot = await Spot.findOne({where: {id: req.params.spotId}})
 
-	res.json(spotReviews)
+	// if(!spot) {
+	// 	next({
+	// 		status: 404,
+	// 		message: "Spot couldn't be found"
+	// 	})
+	// }
+
+	// const spotReviews = await spot.getReviews({
+	// 	order: [["createdAt", "DESC"]],
+	// 	include: [{
+	// 		model: User,
+	// 		attributes: ['id', 'firstName', 'lastName']
+	// 	},
+	// 	{
+	// 		model: reviewImage,
+	// 		attributes: ['id', 'url']
+	// 	}],
+	// 	order: [['id']],
+	// })
+
+	// res.json(spotReviews)
 })
 
 //DELETE A SPOT BY ID

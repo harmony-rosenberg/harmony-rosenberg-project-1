@@ -20,10 +20,49 @@ const NewSpotForm = () => {
 	const [urlTwo, setUrlTwo] = useState("");
 	const [urlThree, setUrlThree] = useState("");
 	const [urlFour, setUrlFour] = useState("");
-
+  const [formErrors, setFormErrors] = useState({});
+	// console.log('HEEERREEE', newSpot.newSpot.id)
+	// dispatch(createImage(urlOne))
+	// dispatch(createImage(urlTwo))
+	// dispatch(createImage(urlThree))
+	// dispatch(createImage(urlFour))
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		const errors = {}
+
+		if(!country) {
+			errors.country = "Country is required"
+		}
+		if(!address) {
+			errors.address = "Street Address is required"
+		}
+		if(!city) {
+			errors.city = "City is required"
+		}
+		if(!state) {
+			errors.state = "State is required"
+		}
+		if(!description || description.length < 30) {
+			errors.state = "Description must be at least 30 characters long"
+		}
+		if(!name) {
+			errors.name = "Name is required"
+		}
+		if(!price) {
+			errors.price = "Price is required"
+		}
+		if(!preview) {
+			errors.previewImage = "Must have at least one preview image"
+		}
+
+		if(Object.keys(errors).length > 0) {
+			setFormErrors(errors)
+			return;
+		}
+		setFormErrors({});
+
 		const payload = {
 			country,
 			address,
@@ -40,12 +79,7 @@ const NewSpotForm = () => {
 		}
 
 		const newSpot = await dispatch(fetchNewSpot(payload))
-		// console.log('HEEERREEE', newSpot.newSpot.id)
 		dispatch(createImage(payload, newSpot.newSpot.id))
-		// dispatch(createImage(urlOne))
-		// dispatch(createImage(urlTwo))
-		// dispatch(createImage(urlThree))
-		// dispatch(createImage(urlFour))
 
 		if(!user) return <h1>You must be logged in to do this</h1>
 
@@ -56,6 +90,8 @@ const NewSpotForm = () => {
 		<main>
 		<form className="new-spot-form" onSubmit={handleSubmit}>
 			<h1>Create A New Spot</h1>
+
+			
 			<h3>Where is your place located?</h3>
 			<p>Guests will only get your exact address once they booked a reservation</p>
 			<label>
@@ -66,6 +102,7 @@ const NewSpotForm = () => {
 					onChange={(e) => setCountry(e.target.value)}
 				/>
 			</label>
+			{formErrors.country && <p>{formErrors.country}</p>}
 			<label>
 				<input
 				placeholder="Street Address"
@@ -74,6 +111,7 @@ const NewSpotForm = () => {
 				onChange={(e) => setAddress(e.target.value)}
 				/>
 			</label>
+			{formErrors.address && <p>{formErrors.address}</p>}
 			<label>
 				<input
 				placeholder="City"
@@ -81,6 +119,7 @@ const NewSpotForm = () => {
 				value={city}
 				onChange={(e) => setCity(e.target.value)}
 				/>
+			{formErrors.city && <p>{formErrors.city}</p>}
 				<span>,</span>
 				<input
 				placeholder="State"
@@ -88,6 +127,7 @@ const NewSpotForm = () => {
 				value={state}
 				onChange={(e) => setState(e.target.value)}
 				/>
+			{formErrors.state && <p>{formErrors.state}</p>}
 			</label>
 				<h3>Describe your place to guests</h3>
 				<p>Mention the best features of your space, any special amenitites like fast wifi or parking, and what you love about the neighborhood</p>
@@ -101,6 +141,7 @@ const NewSpotForm = () => {
 				>
 				</textarea>
 			</label>
+			{formErrors.description && <p>{formErrors.description}</p>}
 			<h3>Create a title for your spot</h3>
 			<p>Catch guests attention with a spot title that highlights what makes your place special</p>
 			<label>
@@ -111,6 +152,7 @@ const NewSpotForm = () => {
 				onChange={(e) => setName(e.target.value)}
 				/>
 			</label>
+			{formErrors.name && <p>{formErrors.name}</p>}
 			<h3>Set a base price for your spot</h3>
 			<p>Competitive pricing can help your listing stand out and rank higher in search results</p>
 			<label>
@@ -121,6 +163,7 @@ const NewSpotForm = () => {
 				onChange={(e) => setPrice(e.target.value)}
 				/>
 			</label>
+			{formErrors.price && <p>{formErrors.price}</p>}
 			<h3>Liven up your spot with photos</h3>
 			<p>Submit a link to atleast one photo to publish your spot</p>
 			<label>
@@ -131,6 +174,7 @@ const NewSpotForm = () => {
 				onChange={(e) => setPreview(e.target.value)}
 				/>
 				</label>
+			{formErrors.previewImage && <p>{formErrors.previewImage}</p>}
 				<div>
 					<div className="images-input">
 						<input

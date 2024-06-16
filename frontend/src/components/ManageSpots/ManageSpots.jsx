@@ -13,8 +13,6 @@ const ManageSpots = () => {
 		dispatch(fetchUserSpots())
 	}, [dispatch])
 
-console.log('SPOTS', spots)
-
 	if(Object.values(spots).length === 0) {
 		return (
 			<div>
@@ -22,9 +20,7 @@ console.log('SPOTS', spots)
 				<Link to='/spots/new'>Create New Spot</Link>
 			</div>
 		)
-	} else {
-
-	}
+	} 
 
 	return (
 		<main>

@@ -3,15 +3,31 @@ import { useSelector } from "react-redux";
 import DeleteReview from "../DeleteReview/DeleteReview";
 import './ReviewDetails.css';
 
-const ReviewDetails = ({reviews}) => {
+const ReviewDetails = ({review}) => {
   const sessionUser = useSelector(state => state.session.user);
+
+	const dateRaw = new Date(review.createdAt).toDateString()
+
+	const dateFormat = (date) => {
+		const dateArr = date.split(" ")
+
+		let returnDate;
+
+		for(let i = 0; i < dateArr.length; i++) {
+			const day = dateArr[0]
+			const num = dateArr[2]
+			let newDate = dateArr.filter(e => e !== day)
+			returnDate = newDate.filter(e => e !== num)
+		}
+		return returnDate.join(" ")
+	}
+
 
 	return (
 		<main>
-			{Object.values(reviews).map(review => (
 				<div key={review.id}>
 					<h1>{review.User.firstName}</h1>
-					<h2>{review.createdAt}</h2>
+					<h2>{dateFormat(dateRaw)}</h2>
 					<p>{review.review}</p>
 					<div className={sessionUser && sessionUser.id === review.userId ? 'container' : 'hidden'}>
 					<OpenModalButton
@@ -19,7 +35,6 @@ const ReviewDetails = ({reviews}) => {
 					modalComponent={<DeleteReview review={review} />} />
 					</div>
 				</div>
-			))}
 		</main>
 	)
 }

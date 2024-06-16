@@ -42,7 +42,13 @@ const ReviewCard = ({spot}) => {
 						modalComponent={<ReviewFormModal spotId={spotId} />}
 					/>
 				</div>
-			<ReviewDetails reviews={reviews}/>
+				<div className='reviews-list'>
+					{Object.values(reviews).map((review) => (
+						<ReviewDetails review={review}/>
+
+					))}
+
+				</div>
 		</main>
 	)
 }

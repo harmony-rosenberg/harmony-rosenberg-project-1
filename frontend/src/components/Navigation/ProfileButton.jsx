@@ -10,6 +10,8 @@ import SignupFormModal from '../SignupFormModal/SignupFormModal';
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const [credential, setCredential] = useState("");
+  const [password, setPassword] = useState("");
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -38,6 +40,13 @@ function ProfileButton({ user }) {
     dispatch(sessionActions.logout());
     closeMenu();
   };
+
+  const demoLogin = () => {
+    setCredential('Demo-User')
+    setPassword('password')
+
+    return dispatch(sessionActions.login({ credential, password }))
+  }
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
@@ -74,6 +83,9 @@ function ProfileButton({ user }) {
                 onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
+            </li>
+            <li>
+              <button onClick={demoLogin}>Log in as Demo User</button>
             </li>
           </>
         )}

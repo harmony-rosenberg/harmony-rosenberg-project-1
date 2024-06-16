@@ -90,8 +90,17 @@ const NewSpotForm = () => {
 		<main>
 		<form className="new-spot-form" onSubmit={handleSubmit}>
 			<h1>Create A New Spot</h1>
+			<div className="error-box">
+			{formErrors.country && <p>{formErrors.country}</p>}
+			{formErrors.address && <p>{formErrors.address}</p>}
+			{formErrors.city && <p>{formErrors.city}</p>}
+			{formErrors.state && <p>{formErrors.state}</p>}
+			{formErrors.description && <p>{formErrors.description}</p>}
+			{formErrors.name && <p>{formErrors.name}</p>}
+			{formErrors.price && <p>{formErrors.price}</p>}
+			{formErrors.previewImage && <p>{formErrors.previewImage}</p>}
+			</div>
 
-			
 			<h3>Where is your place located?</h3>
 			<p>Guests will only get your exact address once they booked a reservation</p>
 			<label>
@@ -102,7 +111,6 @@ const NewSpotForm = () => {
 					onChange={(e) => setCountry(e.target.value)}
 				/>
 			</label>
-			{formErrors.country && <p>{formErrors.country}</p>}
 			<label>
 				<input
 				placeholder="Street Address"
@@ -111,7 +119,6 @@ const NewSpotForm = () => {
 				onChange={(e) => setAddress(e.target.value)}
 				/>
 			</label>
-			{formErrors.address && <p>{formErrors.address}</p>}
 			<label>
 				<input
 				placeholder="City"
@@ -119,7 +126,6 @@ const NewSpotForm = () => {
 				value={city}
 				onChange={(e) => setCity(e.target.value)}
 				/>
-			{formErrors.city && <p>{formErrors.city}</p>}
 				<span>,</span>
 				<input
 				placeholder="State"
@@ -127,7 +133,6 @@ const NewSpotForm = () => {
 				value={state}
 				onChange={(e) => setState(e.target.value)}
 				/>
-			{formErrors.state && <p>{formErrors.state}</p>}
 			</label>
 				<h3>Describe your place to guests</h3>
 				<p>Mention the best features of your space, any special amenitites like fast wifi or parking, and what you love about the neighborhood</p>
@@ -141,7 +146,6 @@ const NewSpotForm = () => {
 				>
 				</textarea>
 			</label>
-			{formErrors.description && <p>{formErrors.description}</p>}
 			<h3>Create a title for your spot</h3>
 			<p>Catch guests attention with a spot title that highlights what makes your place special</p>
 			<label>
@@ -152,7 +156,6 @@ const NewSpotForm = () => {
 				onChange={(e) => setName(e.target.value)}
 				/>
 			</label>
-			{formErrors.name && <p>{formErrors.name}</p>}
 			<h3>Set a base price for your spot</h3>
 			<p>Competitive pricing can help your listing stand out and rank higher in search results</p>
 			<label>
@@ -163,7 +166,6 @@ const NewSpotForm = () => {
 				onChange={(e) => setPrice(e.target.value)}
 				/>
 			</label>
-			{formErrors.price && <p>{formErrors.price}</p>}
 			<h3>Liven up your spot with photos</h3>
 			<p>Submit a link to atleast one photo to publish your spot</p>
 			<label>
@@ -174,7 +176,6 @@ const NewSpotForm = () => {
 				onChange={(e) => setPreview(e.target.value)}
 				/>
 				</label>
-			{formErrors.previewImage && <p>{formErrors.previewImage}</p>}
 				<div>
 					<div className="images-input">
 						<input

@@ -141,7 +141,7 @@ const spotReducer = (state = initialState, action) => {
 			action.payload.forEach(spot => {
 				newState[spot.id] = spot
 			});
-			return {...state, ...newState};
+			return {...newState};
 		}
 			case LOAD_DETAILS: {
 				return {...action.payload}

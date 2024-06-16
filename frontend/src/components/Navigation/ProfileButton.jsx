@@ -10,8 +10,8 @@ import SignupFormModal from '../SignupFormModal/SignupFormModal';
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-  const [credential, setCredential] = useState("");
-  const [password, setPassword] = useState("");
+  const [credential, setCredential] = useState("Demo-lition");
+  const [password, setPassword] = useState("password");
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -42,9 +42,8 @@ function ProfileButton({ user }) {
   };
 
   const demoLogin = () => {
-    setCredential('Demo-User')
-    setPassword('password')
-
+    // setCredential('Demo-lition')
+    // setPassword('password')
     return dispatch(sessionActions.login({ credential, password }))
   }
 

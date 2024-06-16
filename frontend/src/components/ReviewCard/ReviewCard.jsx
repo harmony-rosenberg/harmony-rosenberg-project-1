@@ -39,8 +39,6 @@ const ReviewCard = ({spot}) => {
 		sessionUser.id !== spot.ownerId && Object.values(reviews).length === 0 ?  textClassName = "post-a-review-text" : textClassName = "hidden"
 	}
 
-	console.log('REVIEWS', reviews)
-
 	return (
 		<main>
 			<h2>⭐{spot.avgStarRating || "New"} {displayNothing} {noReviews}</h2>

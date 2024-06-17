@@ -45,7 +45,7 @@ const UpdateSpot = () => {
 
 	return (
 		<div>
-			<form onSubmit={handleSubmit}>
+			<form className="spot-form" onSubmit={handleSubmit}>
 				<h1>Update your spot</h1>
 			<label>
 				<input

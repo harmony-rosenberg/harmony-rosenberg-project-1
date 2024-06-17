@@ -50,7 +50,7 @@ const ReviewFormModal = ({ spotId }) => {
 
 	return (
 		<main>
-		<form onSubmit={handleSubmit} className='review-form'>
+		<form onSubmit={handleSubmit} className='form-container'>
 			<h1>How was your stay?</h1>
 			{errors && <p>{errors}</p>}
 			<label>

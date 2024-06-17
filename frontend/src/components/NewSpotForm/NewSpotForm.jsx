@@ -88,7 +88,7 @@ const NewSpotForm = () => {
 
 	return (
 		<main>
-		<form className="new-spot-form" onSubmit={handleSubmit}>
+		<form className="spot-form" onSubmit={handleSubmit}>
 			<h1>Create A New Spot</h1>
 			<div className="error-box">
 			{formErrors.country && <p>{formErrors.country}</p>}
@@ -168,6 +168,7 @@ const NewSpotForm = () => {
 			</label>
 			<h3>Liven up your spot with photos</h3>
 			<p>Submit a link to atleast one photo to publish your spot</p>
+				<div className="images-input">
 			<label>
 				<input
 				placeholder="Preview image URL"
@@ -176,8 +177,6 @@ const NewSpotForm = () => {
 				onChange={(e) => setPreview(e.target.value)}
 				/>
 				</label>
-				<div>
-					<div className="images-input">
 						<input
 							type="text"
 							placeholder="Image Url"
@@ -190,21 +189,19 @@ const NewSpotForm = () => {
 							value={urlTwo}
 							onChange={(e) => setUrlTwo(e.target.value)}
 						/>
-										<input
+						<input
 							type="text"
 							placeholder="Image Url"
 							value={urlThree}
 							onChange={(e) => setUrlThree(e.target.value)}
 						/>
-										<input
+						<input
 							type="text"
 							placeholder="Image Url"
 							value={urlFour}
 							onChange={(e) => setUrlFour(e.target.value)}
 						/>
 					</div>
-
-				</div>
 			<button className="create-btn" type="submit">Create Spot</button>
 		</form>
 		</main>

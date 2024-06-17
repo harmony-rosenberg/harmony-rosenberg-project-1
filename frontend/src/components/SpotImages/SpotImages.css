@@ -1,13 +1,38 @@
-.preview-image {
+.spot-images {
+	display: grid;
+	grid-template-columns: repeat(3, 2fr 1fr 1fr);
+	grid-template-rows: repeat(2, 1fr);
+	grid-template-areas:
+	"preview image-1 image-2"
+	"preview image-3 image-4";
+}
+
+.image-0 {
+	grid-area: preview;
 	height: 400px;
 	width: 400px;
 }
 
-.image {
+.image-1 {
+	grid-area: image-1;
 	height: 200px;
 	width: 200px;
 }
 
-.images-card {
-	display: grid;
+.image-2 {
+	grid-area: image-2;
+	height: 200px;
+	width: 200px;
+}
+
+.image-3 {
+	grid-area: image-3;
+	height: 200px;
+	width: 200px;
+}
+
+.image-4 {
+	grid-area: image-4;
+	height: 200px;
+	width: 200px;
 }

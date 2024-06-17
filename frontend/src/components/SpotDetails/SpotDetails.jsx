@@ -24,8 +24,9 @@ const SpotDetails = () => {
 			<h1>{spot.name}</h1>
 			<h2>{spot.city}, {spot.state}, {spot.country}</h2>
 			<div className='spot-images'>
-			{spot.spotImages.map(image => (
-				<SpotImages key={image.id} image={image} />
+			{spot.spotImages.map((image, index) => (
+					<img className={`image-${index}`} src={image.url}></img>
+				// <SpotImages key={image.id} image={image} />
 			))}
 			</div>
 			<h3>Hosted By {spot.owner.firstName} {spot.owner.lastName}</h3>

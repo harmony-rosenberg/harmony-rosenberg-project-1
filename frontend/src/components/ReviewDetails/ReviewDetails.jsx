@@ -22,7 +22,11 @@ const ReviewDetails = ({review}) => {
 
 	let deleteBtn;
 
-	sessionUser.id === review.User.id ? deleteBtn = '' : deleteBtn = 'hidden'
+	// console.log('HERE', review.User.id)
+
+	if(review.User.id) {
+		sessionUser.id === review.User.id ? deleteBtn = '' : deleteBtn = 'hidden'
+	}
 
 	return (
 		<div key={review.id} className="single-review">

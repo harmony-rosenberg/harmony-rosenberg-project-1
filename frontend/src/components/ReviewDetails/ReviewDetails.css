@@ -5,8 +5,7 @@
 .single-review {
 	display: flex;
 	flex-direction: column;
-	/* gap: 5px; */
-	margin-top: 25px;
+	margin-top: 10px;
 }
 
 .userName {

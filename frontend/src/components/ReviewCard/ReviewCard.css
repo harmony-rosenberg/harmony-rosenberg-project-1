@@ -8,7 +8,6 @@
 }
 
 .reviews-list {
-	/* color: red; */
 	display: flex;
 	flex-direction: column;
 }

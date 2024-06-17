@@ -20,7 +20,7 @@ const SpotDetails = () => {
 
 	return (
 		isLoaded ? (
-			<main>
+			<main className='spot-details'>
 			<h1>{spot.name}</h1>
 			<h2>{spot.city}, {spot.state}, {spot.country}</h2>
 			<div className='spot-images'>
@@ -29,9 +29,11 @@ const SpotDetails = () => {
 				// <SpotImages key={image.id} image={image} />
 			))}
 			</div>
+			<div className='middle-details'>
 			<h3>Hosted By {spot.owner.firstName} {spot.owner.lastName}</h3>
-			<p>{spot.description}</p>
+			<div className='description'>{spot.description} </div>
 			<CalloutBox spot={spot}/>
+			</div>
 			<ReviewCard spot={spot}/>
 		</main>
 		) : (

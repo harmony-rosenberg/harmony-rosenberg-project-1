@@ -25,10 +25,10 @@ const DeleteSpot = ({spot}) => {
 			<h2>are you sure you want to remove this spot?</h2>
 		<form>
 			<label>
-				<button onClick={handleDelete}>delete</button>
+				<button onClick={handleDelete}>Yes (delete spot)</button>
 			</label>
 			<label>
-				<button onClick={closeModal}>nvm</button>
+				<button onClick={closeModal}>No (keep spot)</button>
 			</label>
 		</form>
 		</div>

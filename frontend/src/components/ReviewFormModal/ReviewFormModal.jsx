@@ -4,13 +4,13 @@ import './ReviewForm.css';
 import { useDispatch } from 'react-redux';
 import { fetchNewReview } from '../../store/reviews';
 import { useModal } from '../../context/Modal';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const ReviewFormModal = ({ spotId }) => {
 	const { closeModal } = useModal();
 	const dispatch = useDispatch();
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	const [review, setReview] = useState("")
 	const [stars, setStars] = useState(0);
@@ -20,30 +20,31 @@ const ReviewFormModal = ({ spotId }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
-		const validationErrors = [];
+		// const validationErrors = [];
 
-		if (review.length < 10) {
-      validationErrors.push('Review must be at least 10 characters');
-    }
+		// if (review.length < 10) {
+    //   validationErrors.push('Review must be at least 10 characters');
+    // }
 
-    if (stars === 0) {
-      validationErrors.push('Rating must be at least 1 star');
-    }
+    // if (stars === 0) {
+    //   validationErrors.push('Rating must be at least 1 star');
+    // }
 
-    setErrors(validationErrors);
+    // setErrors(validationErrors);
 
-		if(validationErrors.length === 0) {
-			try {
+		// if(validationErrors.length === 0) {
+		// 	try {
 				const payload = {
 					review,
 					stars
 				}
-				await dispatch(fetchNewReview(spotId, payload))
-				.then(closeModal())
-			} catch (error) {
-				setErrors([error.message])
-			}
-		}
+				return dispatch(fetchNewReview(spotId, payload))
+				.then(closeModal()).then(navigate(`/spots/${spotId}`))
+				// .then(navigate(`/spots/${spotId}`))
+			// } catch (error) {
+			// 	setErrors([error.message])
+			// }
+		// }
 
 		// return navigate(`/spots/${spotId}`)
 	}
@@ -52,7 +53,7 @@ const ReviewFormModal = ({ spotId }) => {
 		<main>
 		<form onSubmit={handleSubmit} className='form-container'>
 			<h1>How was your stay?</h1>
-			{errors && <p>{errors}</p>}
+			{/* {errors && <p>{errors}</p>} */}
 			<label>
 				<textarea
 				value={review}

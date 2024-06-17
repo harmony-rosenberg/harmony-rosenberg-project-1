@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './ReviewCard.css';
 import ReviewFormModal from '../ReviewFormModal'
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
@@ -16,6 +16,12 @@ const ReviewCard = ({spot}) => {
 	const dispatch = useDispatch();
 	const reviews = useSelector(state => state.reviews);
   const sessionUser = useSelector(state => state.session.user);
+	const [isLoaded, setIsLoaded] = useState(false);
+
+
+	useEffect(() => {
+		dispatch(fetchReviews(spotId)).then(() => setIsLoaded(true))
+	}, [spotId, dispatch])
 
 	let reviewClass
 
@@ -23,15 +29,13 @@ const ReviewCard = ({spot}) => {
 		sessionUser.id === spot.ownerId ? reviewClass = "hidden" : reviewClass = "review-modal"
 	}
 
-	Object.values(reviews).forEach(review => {
-		if(sessionUser && review.userId === sessionUser.id) {
-			reviewClass = "hidden"
-		}
-	})
-
-	useEffect(() => {
-		dispatch(fetchReviews(spotId))
-	}, [spotId, dispatch])
+	if(reviews) {
+		Object.values(reviews).map(review => {
+			if(sessionUser && review.User.id === sessionUser.id) {
+				reviewClass = "hidden"
+			}
+		})
+	}
 
 	let textClassName;
 
@@ -40,7 +44,9 @@ const ReviewCard = ({spot}) => {
 	}
 
 	return (
-		<main>
+		isLoaded ? (
+		<div>
+			<div className='reviews-container'>
 			<h2>⭐{spot.avgStarRating || "New"} {displayNothing} {noReviews}</h2>
 			<div className={textClassName}>Be the First to post a review!</div>
 				<div className={reviewClass}>
@@ -54,7 +60,11 @@ const ReviewCard = ({spot}) => {
 						<ReviewDetails key={review.id} review={review}/>
 					))}
 				</div>
-		</main>
+			</div>
+		</div>
+		) : (
+			<div> whoopsie </div>
+		)
 	)
 }
 

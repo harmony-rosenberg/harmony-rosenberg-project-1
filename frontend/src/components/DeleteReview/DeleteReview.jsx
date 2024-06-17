@@ -20,7 +20,7 @@ const { closeModal } = useModal();
 	}
 
 	return (
-		<div>
+		<div className="form-container">
 			<h1>Confirm Delete</h1>
 			<h2>are you sure you want to remove this review?</h2>
 			<form>

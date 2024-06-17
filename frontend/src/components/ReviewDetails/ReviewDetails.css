@@ -1,3 +1,24 @@
 .hidden {
 	display: none;
 }
+
+.single-review {
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
+}
+
+.userName {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.reviewDate {
+	font-size: 20px;
+	color: darkblue;
+	margin-bottom: 10px;
+}
+
+.reviewText {
+	margin-bottom: 10px;
+}

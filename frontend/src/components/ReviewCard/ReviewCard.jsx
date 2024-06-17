@@ -17,21 +17,21 @@ const ReviewCard = ({spot}) => {
 	const reviews = useSelector(state => state.reviews);
   const sessionUser = useSelector(state => state.session.user);
 
+	useEffect(() => {
+		dispatch(fetchReviews(spotId))
+	}, [spotId, dispatch])
+
 	let reviewClass
 
 	if(sessionUser) {
 		sessionUser.id === spot.ownerId ? reviewClass = "hidden" : reviewClass = "review-modal"
 	}
 
-	Object.values(reviews).forEach(review => {
-		if(sessionUser && review.userId === sessionUser.id) {
+	Object.values(reviews).map(review => {
+		if(sessionUser && review.User.id === sessionUser.id) {
 			reviewClass = "hidden"
 		}
 	})
-
-	useEffect(() => {
-		dispatch(fetchReviews(spotId))
-	}, [spotId, dispatch])
 
 	let textClassName;
 
@@ -39,8 +39,13 @@ const ReviewCard = ({spot}) => {
 		sessionUser.id !== spot.ownerId && Object.values(reviews).length === 0 ?  textClassName = "post-a-review-text" : textClassName = "hidden"
 	}
 
+	if(sessionUser) {
+
+	}
+
 	return (
-		<main>
+		<div>
+			<div className='reviews-container'>
 			<h2>⭐{spot.avgStarRating || "New"} {displayNothing} {noReviews}</h2>
 			<div className={textClassName}>Be the First to post a review!</div>
 				<div className={reviewClass}>
@@ -54,7 +59,8 @@ const ReviewCard = ({spot}) => {
 						<ReviewDetails key={review.id} review={review}/>
 					))}
 				</div>
-		</main>
+			</div>
+		</div>
 	)
 }
 

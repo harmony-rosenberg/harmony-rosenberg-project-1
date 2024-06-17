@@ -1,3 +1,14 @@
 .hidden {
 	display: none;
 }
+
+.post-a-review-text {
+	font-size: 25px;
+	margin-bottom: 15px;
+}
+
+.reviews-list {
+	/* color: red; */
+	display: flex;
+	flex-direction: column;
+}

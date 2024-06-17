@@ -16,7 +16,7 @@ const ManageSpots = () => {
 	if(Object.values(spots).length === 0) {
 		return (
 			<div>
-				<h1>Manage Your Spotsss</h1>
+				<h1>Manage Your Spots</h1>
 				<Link to='/spots/new'>Create New Spot</Link>
 			</div>
 		)

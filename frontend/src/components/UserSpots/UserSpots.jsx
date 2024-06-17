@@ -9,7 +9,6 @@ const UserSpots = ({spot}) => {
 	const update = () => {
 		return navigate(`/spots/${spot.id}/update`)
 	}
-	//if no spots render create a spot button otherwise render tile list
 
 	return (
 		<div>
@@ -17,7 +16,7 @@ const UserSpots = ({spot}) => {
 			<img className='splash-img' src={spot.previewImage} />
 			<div className='row-one'>
 			<span>{spot.city}, {spot.state}</span>
-			{/* <span className='rating'> ⭐ {spot.avgRating || "new"}</span> */}
+			<span className='rating'> ⭐ {spot.avgRating || "new"}</span>
 			</div>
 			<div key={spot.id} className='row-two'>
 			<span className='spot-price'> {spot.price} </span> <span>night</span>

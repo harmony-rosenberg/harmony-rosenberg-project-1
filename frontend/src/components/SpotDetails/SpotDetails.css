@@ -1,6 +1,23 @@
+.spot-details {
+	position: absolute;
+}
+
 .callout-box {
 	border: 1px black solid;
 	height: 100px;
+	width: 450px;
+	background-color: lightgrey;
+	position: relative;
+	left: 550px;
+	bottom: 100px;
+}
+
+.middle-details {
+	margin: 0;
+	border-bottom: 1px black solid;
+}
+
+.description {
 	width: 500px;
 }
 

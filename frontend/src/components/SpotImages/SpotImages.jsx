@@ -2,10 +2,14 @@ import './SpotImages.css';
 
 const SpotImages = ({ image }) => {
 
-	const imageClass = image.previewImage ? 'preview-image' : 'image';
+	// console.log('IMAGE', image)
+
+	console.log(imageIndex)
+
+	const imageClass = image.previewImage ? 'preview-image' : `image`;
 
 	return (
-		<div className='images-card'>
+		<div>
 			<img className={imageClass} src={image.url} />
 		</div>
 	)

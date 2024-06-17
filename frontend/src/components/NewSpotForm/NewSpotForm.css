@@ -1,10 +1,16 @@
-.new-spot-form {
+.spot-form {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	height: auto;
 	gap: 10px;
 }
+
+.images-input {
+	display: flex;
+	flex-direction: column;
+}
+
 
 .error-box {
 	color: red;

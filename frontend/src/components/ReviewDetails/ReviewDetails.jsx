@@ -20,13 +20,17 @@ const ReviewDetails = ({review}) => {
 		return returnDate.join(" ")
 	}
 
+	let deleteBtn;
+
+	sessionUser.id === review.User.id ? deleteBtn = '' : deleteBtn = 'hidden'
+
 	return (
 		<main>
 				<div key={review.id}>
 					<h1>{review.User.firstName}</h1>
 					<h2>{dateFormat(dateRaw)}</h2>
 					<p>{review.review}</p>
-					<div className={sessionUser && sessionUser.id === review.userId ? 'container' : 'hidden'}>
+					<div className={deleteBtn}>
 					<OpenModalButton
 					buttonText="Delete your review"
 					modalComponent={<DeleteReview review={review} />} />

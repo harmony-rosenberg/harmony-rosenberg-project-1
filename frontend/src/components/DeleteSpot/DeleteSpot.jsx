@@ -1,6 +1,7 @@
 import { fetchDeleteSpot } from "../../store/spots"
 import { useDispatch } from "react-redux";
 import { useModal } from '../../context/Modal';
+import "./DeleteSpot.css"
 
 const DeleteSpot = ({spot}) => {
 	const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const DeleteSpot = ({spot}) => {
 	}
 
 	return (
-		<div>
+		<div className="form-container">
 			<h1>Confirm Delete</h1>
 			<h2>are you sure you want to remove this spot?</h2>
 		<form>

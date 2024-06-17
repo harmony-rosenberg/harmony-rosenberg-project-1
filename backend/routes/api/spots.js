@@ -9,14 +9,14 @@ const { requireAuth } = require('../../utils/auth.js');
 router.get('/', async (req, res, next) => {
 	let {page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query
 
-	if(!page) {page = 1}
-	if(!size) {size = 5}
+	// if(!page) {page = 1}
+	// if(!size) {size = 5}
 
-	let pagination = {}
-	pagination.limit = size
-	pagination.offset = size * (page -1)
+	// let pagination = {}
+	// pagination.limit = size
+	// pagination.offset = size * (page -1)
 
-	let filters = {}
+	// let filters = {}
 
 // 	if(!maxLat) {
 // 		maxLat = 90
@@ -101,7 +101,7 @@ router.get('/', async (req, res, next) => {
 	// try {
 		let spots = await Spot.findAll({
 			where: {
-				...filters
+				// ...filters
 			},
 		include: [{
 			model: Review,
@@ -111,7 +111,7 @@ router.get('/', async (req, res, next) => {
 			model: spotImage,
 			attributes: ['url']
 		}],
-		...pagination,
+		// ...pagination,
 	})
 
 	let avgVal = function(arr) {
@@ -487,7 +487,7 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		newImage = await spotImage.create({
 			spotId: spot.id,
 			url: preview,
-			preview: true
+			previewImage: true
 		})
 	}
 
@@ -495,7 +495,7 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		imageOne = await spotImage.create({
 			spotId: spot.id,
 			url: urlOne,
-			preview: false
+			previewImage: false
 		})
 	}
 
@@ -503,7 +503,7 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		imageTwo = await spotImage.create({
 			spotId: spot.id,
 			url: urlTwo,
-			preview: false
+			previewImage: false
 		})
 	}
 
@@ -511,7 +511,7 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		imageThree = await spotImage.create({
 			spotId: spot.id,
 			url: urlThree,
-			preview: false
+			previewImage: false
 		})
 	}
 
@@ -519,7 +519,7 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 		imageFour = await spotImage.create({
 			spotId: spot.id,
 			url: urlFour,
-			preview: false
+			previewImage: false
 		})
 	}
 
@@ -527,27 +527,27 @@ router.post('/:spotId/images', requireAuth, async(req, res, next) => {
 			previewImage : {
 				id: newImage.spotId,
 				url: newImage.url,
-				preview: newImage.preview
+				previewImage: true
 			},
 			imageOne : {
 				id: imageOne.spotId,
 				url: imageOne.url,
-				preview: imageOne.preview
+				previewImage: false
 			},
 			imageTwo: {
 				id: imageTwo.spotId,
 				url: imageTwo.url,
-				preview: imageTwo.preview
+				previewImage: false
 			},
 			imageThree: {
 				id: imageThree.spotId,
 				url: imageThree.url,
-				preview: imageThree.preview
+				previewImage: false
 			},
 			imageFour: {
 				id: imageFour.spotId,
 				url: imageFour.url,
-				preview: imageFour.preview
+				previewImage: false
 			}
 		}
 

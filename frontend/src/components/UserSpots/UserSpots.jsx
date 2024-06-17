@@ -25,10 +25,12 @@ const UserSpots = ({spot}) => {
 			<div>
 			</div>
 		</div>
+		<div className="manage-btns">
 			<button onClick={update}>Update Spot</button>
 			<OpenModalButton
 			buttonText="Delete your spot"
 			modalComponent={<DeleteSpot spot={spot}/>} />
+		</div>
 		</div>
 	)
 }
